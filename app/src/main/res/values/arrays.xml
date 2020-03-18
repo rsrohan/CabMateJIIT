@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="locations">
+        <item>Select</item>
+<!--        <item>Botanical Garden</item>-->
+        <item>JIIT Sec: 62</item>
+        <item>JIIT Sec: 128</item>
+    </string-array>
+</resources>

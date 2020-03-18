@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1011644179352",
+    "firebase_url": "https://cabmatejiit.firebaseio.com",
+    "project_id": "cabmatejiit",
+    "storage_bucket": "cabmatejiit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011644179352:android:f91973110e5d9fc1aa41ed",
+        "android_client_info": {
+          "package_name": "com.example.cabmatejiit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1011644179352-rposk076beqp4mem8i31otqd3vb8p681.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cabmatejiit",
+            "certificate_hash": "e4ff16046f24b2619d29c1cd3f02bfc1f59bc096"
+          }
+        },
+        {
+          "client_id": "1011644179352-fqgjiuk8bfgeei4mu9troq7btio2nlco.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZ0kx_EtADS3CBYcTD0HavXB6hi20N1bo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1011644179352-fqgjiuk8bfgeei4mu9troq7btio2nlco.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

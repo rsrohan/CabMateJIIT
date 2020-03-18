@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/senderName"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:fadingEdge="vertical"
+        android:textSize="12sp"
+        android:layout_marginBottom="2dp"
+        android:visibility="gone"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/buttons_colorprimary_bg"
+        android:padding="@dimen/paddingUniversal"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:id="@+id/received"
+        android:layout_gravity="start"
+        android:visibility="gone"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/buttons_colorprimary_bg"
+        android:padding="@dimen/paddingUniversal"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:id="@+id/sent"
+        android:layout_gravity="end"
+        android:visibility="gone"/>
+
+</LinearLayout>
