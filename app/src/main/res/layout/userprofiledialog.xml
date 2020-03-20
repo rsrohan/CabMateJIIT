@@ -12,28 +12,50 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/entername"
+        android:text="Complete your profile."
         android:id="@+id/message"
         android:textColor="#000000"
         android:textStyle="bold"
         android:gravity="center"
         android:padding="8dp"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:id="@+id/displayPicture"
+        android:layout_margin="8dp"
+        android:src="@mipmap/person"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tap to update display picture"
+        android:layout_marginBottom="8dp"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textCapWords"
-        android:background="@drawable/buttons_colorprimary_bg"
+        android:background="@drawable/bg"
         android:padding="12dp"
         android:id="@+id/username"
         android:hint="Full Name"
         />
+    <Spinner
+        android:id="@+id/gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_margin="12dp"
+        android:entries="@array/gender"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/save"
-        android:layout_margin="14dp"
+        android:layout_margin="8dp"
         android:padding="4dp"
+        android:background="@drawable/buttons_colorprimary_bg"
         android:gravity="center"
+        android:textColor="@android:color/white"
         android:text="@string/cont"/>
     <ProgressBar
         android:layout_width="wrap_content"

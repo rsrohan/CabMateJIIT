@@ -6,4 +6,11 @@
         <item>JIIT Sec: 62</item>
         <item>JIIT Sec: 128</item>
     </string-array>
+    <string-array name="gender">
+        <item>Select Gender</item>
+        <item>Male</item>
+        <item>Female</item>
+        <item>TransGender</item>
+        <item>Prefer Not to Say</item>
+    </string-array>
 </resources>

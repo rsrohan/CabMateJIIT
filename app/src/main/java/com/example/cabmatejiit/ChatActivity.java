@@ -1,15 +1,8 @@
 package com.example.cabmatejiit;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Telephony;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +10,13 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,23 +39,25 @@ import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
 
-    DatabaseReference chatReference, cabmateReference;
+    DatabaseReference chatReference, cabmateDetailsReference;
     DatabaseReference referenceToGroup;
-    ArrayList<Message> messages;
+    ArrayList<Message> messagesInGroup;
     private RecyclerView recyclerView;
     FirebaseUser user;
     EditText messageBox;
     final List<FirebaseTextMessage> conversation = new ArrayList<>();
 
-    ArrayList<UserProfile> cabmates2;
+    ArrayList<UserProfile> cabmatesAfterLeavingGroup;
 
     ImageButton sendButton;
     private String TAG = "ChatActivity";
     private RecyclerView recyclerView2;
     private RecyclerView recyclerView3;
-    private RecyclerAdapterForCabmates recyclerAdapterForCabmates;
     private String ref;
+    private DatabaseReference referenceToUserDetails;
+    private DatabaseReference referenceToLiveBookings;
 
+    UserProfile userProfileDetails;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,23 +65,41 @@ public class ChatActivity extends AppCompatActivity {
         messageBox = findViewById(R.id.messageBox);
         sendButton = findViewById(R.id.sendBtn);
 
-        cabmates2 = new ArrayList<>();
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        cabmatesAfterLeavingGroup = new ArrayList<>();
+        messagesInGroup = new ArrayList<>();
 
-        recyclerView2 = findViewById(R.id.recyclerViewForCabmates);
-        recyclerView2.setHasFixedSize(true);
-        recyclerView2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+
+        setupRecyclerViews();
+
 
         user = FirebaseAuth.getInstance().getCurrentUser();
+        checkifusernull();
+
         ref = getIntent().getStringExtra("reference");
 
+        referenceToUserDetails = FirebaseDatabase
+                .getInstance()
+                .getReference("USER_DETAILS")
+                .child(user.getPhoneNumber());
+        referenceToLiveBookings = FirebaseDatabase.getInstance().getReference("LIVE_BOOKINGS");
         referenceToGroup = FirebaseDatabase.getInstance().getReference("GROUPS");
         chatReference = referenceToGroup.child(Objects.requireNonNull(ref)).child("CHATS");
-        cabmateReference = referenceToGroup.child(Objects.requireNonNull(ref)).child("CABMATES");
+        cabmateDetailsReference = referenceToGroup.child(Objects.requireNonNull(ref)).child("CABMATES");
 
-        cabmateReference.addValueEventListener(new ValueEventListener() {
+        userProfileDetails=new UserProfile();
+        referenceToUserDetails.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userProfileDetails = dataSnapshot.getValue(UserProfile.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        cabmateDetailsReference.addValueEventListener(new ValueEventListener() {
             ArrayList<UserProfile> cabmates = new ArrayList<>();
 
             @Override
@@ -87,13 +107,14 @@ public class ChatActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     cabmates.add(snapshot.getValue(UserProfile.class));
                 }
-                Log.d(TAG, "onDataChangeee: " + cabmates);
+                Log.d(TAG, "onDataChange: " + cabmates);
 
-                recyclerAdapterForCabmates = new RecyclerAdapterForCabmates(getApplicationContext(), cabmates);
+                RecyclerAdapterForCabmates recyclerAdapterForCabmates = new RecyclerAdapterForCabmates(getApplicationContext(), cabmates);
                 recyclerAdapterForCabmates.notifyDataSetChanged();
                 recyclerView2.setAdapter(recyclerAdapterForCabmates);
 
-                cabmates2 = cabmates;
+                cabmatesAfterLeavingGroup = cabmates;
+                Toast.makeText(ChatActivity.this, ""+cabmatesAfterLeavingGroup.size(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -102,7 +123,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        messages = new ArrayList<>();
 
         chatReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -123,20 +143,20 @@ public class ChatActivity extends AppCompatActivity {
                     recyclerView.scrollToPosition(messageArrayList.size() - 1);
 
 
-                    messages = messageArrayList;
+                    messagesInGroup = messageArrayList;
 
-                    for (int i = 0; i < messages.size(); i++) {
-                        if (messages.get(i).getNumber().equals(user.getPhoneNumber())) {
+                    for (int i = 0; i < messagesInGroup.size(); i++) {
+                        if (messagesInGroup.get(i).getNumber().equals(user.getPhoneNumber())) {
                             conversation.add(FirebaseTextMessage
-                                    .createForLocalUser(messages.get(i).getMessage(),
+                                    .createForLocalUser(messagesInGroup.get(i).getMessage(),
                                             System.currentTimeMillis()));
 
                         } else {
 
                             conversation.add(FirebaseTextMessage.createForRemoteUser(
-                                    messages.get(i).getMessage(),
+                                    messagesInGroup.get(i).getMessage(),
                                     System.currentTimeMillis(),
-                                    messages.get(i).getNumber()));
+                                    messagesInGroup.get(i).getNumber()));
                         }
                     }
 
@@ -146,9 +166,7 @@ public class ChatActivity extends AppCompatActivity {
                                 .addOnSuccessListener(new OnSuccessListener<SmartReplySuggestionResult>() {
                                     @Override
                                     public void onSuccess(SmartReplySuggestionResult result) {
-                                        recyclerView3 = findViewById(R.id.recyclerViewsmart);
-                                        recyclerView3.setHasFixedSize(true);
-                                        recyclerView3.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+
                                         if (result.getStatus() == SmartReplySuggestionResult.STATUS_NOT_SUPPORTED_LANGUAGE) {
                                             // The conversation's language isn't supported, so the
                                             // the result doesn't contain any suggestions.
@@ -159,7 +177,7 @@ public class ChatActivity extends AppCompatActivity {
                                                 Log.d(TAG, "onSuccess: " + replyText);
                                                 arrayList.add(replyText);
                                             }
-                                            RecyclerAdapterForSmartReply recyclerAdapterForSmartReply = new RecyclerAdapterForSmartReply(getApplicationContext(), arrayList, chatReference, getIntent().getStringExtra("username"), user.getPhoneNumber(), messages);
+                                            RecyclerAdapterForSmartReply recyclerAdapterForSmartReply = new RecyclerAdapterForSmartReply(getApplicationContext(), arrayList, chatReference, getIntent().getStringExtra("username"), user.getPhoneNumber(), messagesInGroup);
                                             recyclerAdapterForSmartReply.notifyDataSetChanged();
                                             recyclerView3.setAdapter(recyclerAdapterForSmartReply);
                                         }
@@ -195,14 +213,16 @@ public class ChatActivity extends AppCompatActivity {
                 if (!messageBox.getText().toString().equals("")) {
                     Message m = new Message(messageBox.getText().toString(), getIntent().getStringExtra("username"), user.getPhoneNumber());
 
-                    messages.add(m);
+                    messagesInGroup.add(m);
 
 
-                    chatReference.setValue(messages);
+                    chatReference.setValue(messagesInGroup);
                     messageBox.setText("");
                     try {
                         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                        if (imm != null) {
+                            imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+                        }
                     } catch (Exception e) {
                         // TODO: handle exception
                     }
@@ -213,6 +233,27 @@ public class ChatActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void checkifusernull() {
+        if (user == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
+    }
+
+    private void setupRecyclerViews() {
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        recyclerView2 = findViewById(R.id.recyclerViewForCabmates);
+        recyclerView2.setHasFixedSize(true);
+        recyclerView2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        recyclerView3 = findViewById(R.id.recyclerViewsmart);
+        recyclerView3.setHasFixedSize(true);
+        recyclerView3.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
     }
 
     @Override
@@ -228,30 +269,31 @@ public class ChatActivity extends AppCompatActivity {
 
 
         if (id == R.id.icon) {
-            new AlertDialog.Builder(getApplicationContext())
+            new AlertDialog.Builder(ChatActivity.this)
                     .setTitle("Warning")
                     .setMessage("Are you sure you want to leave this group?")
-
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // Continue with delete operation
-                            for (int i = 0; i < cabmates2.size(); i++) {
-                                if (cabmates2.get(i).getPhone().equals(user.getPhoneNumber())) {
-                                    cabmates2.remove(i);
-                                    recyclerAdapterForCabmates.notifyDataSetChanged();
-                                    if (ref.equals(user.getPhoneNumber())) {
+                            for (int i = 0; i < cabmatesAfterLeavingGroup.size(); i++) {
+
+                                if (cabmatesAfterLeavingGroup.get(i).getPhone().equals(user.getPhoneNumber())) {
+                                    cabmatesAfterLeavingGroup.remove(i);
+                                    //recyclerAdapterForCabmates.notifyDataSetChanged();
+                                    if (ref.equals(user.getPhoneNumber()) && cabmatesAfterLeavingGroup.size()>0) {
                                         final DatabaseReference databaseReferenceAfterLeaving = referenceToGroup
-                                                .child(cabmates2.get(0).getPhone());
+                                                .child(cabmatesAfterLeavingGroup.get(0).getPhone());
                                         referenceToGroup.child(ref).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                                                 databaseReferenceAfterLeaving.setValue(dataSnapshot.getValue());
-                                                for (int i = 0; i < cabmates2.size(); i++) {
-                                                    cabmates2.get(i).setBookedNumber(cabmates2.get(0).getPhone());
+                                                for (int i = 0; i < cabmatesAfterLeavingGroup.size(); i++) {
+                                                    cabmatesAfterLeavingGroup.get(i).setBookedNumber(cabmatesAfterLeavingGroup.get(0).getPhone());
                                                 }
+                                                referenceToGroup.child(cabmatesAfterLeavingGroup.get(0).getPhone())
+                                                        .child("CABMATES")
+                                                        .setValue(cabmatesAfterLeavingGroup);
                                             }
 
                                             @Override
@@ -260,21 +302,33 @@ public class ChatActivity extends AppCompatActivity {
                                             }
                                         });
 
+                                    }else{
+                                        referenceToGroup.child(ref).setValue(null);
                                     }
-                                    FirebaseDatabase
-                                            .getInstance()
-                                            .getReference("USER_DETAILS")
-                                            .child(user.getPhoneNumber())
-                                            .child("alreadyBooked")
-                                            .setValue("false");
-                                    FirebaseDatabase
-                                            .getInstance()
-                                            .getReference("USER_DETAILS")
-                                            .child(user.getPhoneNumber())
-                                            .child("bookedNumber")
-                                            .setValue("");
+                                    userProfileDetails.setAlreadyBooked(false);
+                                    userProfileDetails.setBookedNumber("");
+                                    referenceToUserDetails
+                                            .setValue(userProfileDetails);
 
 
+                                    referenceToLiveBookings.child(userProfileDetails.getPathBooked()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot snapshot:dataSnapshot.getChildren())
+                                            {
+                                                if (snapshot.child("phone").getValue(String.class).equals(user.getPhoneNumber()))
+                                                {
+                                                    referenceToLiveBookings.child(userProfileDetails.getPathBooked()).child(snapshot.getKey()).setValue(null);
+                                                    Log.d(TAG, "onDataChange: "+snapshot.getKey());
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
                                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                     finish();
                                 }
@@ -282,8 +336,6 @@ public class ChatActivity extends AppCompatActivity {
 
                         }
                     })
-
-                    // A null listener allows the button to dismiss the dialog and take no further action.
                     .setNegativeButton(android.R.string.no, null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();

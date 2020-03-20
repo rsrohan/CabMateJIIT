@@ -4,10 +4,21 @@ public class UserProfile {
 
     String name;
     String phone;
-    String enrollment;
     String gender;
-    String year;
     String bookedNumber;
+    String imageURL;
+    boolean alreadyBooked;
+
+    public String getPathBooked() {
+        return pathBooked;
+    }
+
+    public void setPathBooked(String pathBooked) {
+        this.pathBooked = pathBooked;
+    }
+
+    String pathBooked;
+
 
     public String getImageURL() {
         return imageURL;
@@ -17,8 +28,6 @@ public class UserProfile {
         this.imageURL = imageURL;
     }
 
-    String imageURL;
-    boolean alreadyBooked;
 
     public UserProfile() {
     }
@@ -51,13 +60,7 @@ public class UserProfile {
         this.phone = phone;
     }
 
-    public String getEnrollment() {
-        return enrollment;
-    }
 
-    public void setEnrollment(String enrollment) {
-        this.enrollment = enrollment;
-    }
 
     public String getGender() {
         return gender;
@@ -67,12 +70,13 @@ public class UserProfile {
         this.gender = gender;
     }
 
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
+    public UserProfile(String name, String phone, String gender, String bookedNumber, String imageURL, boolean alreadyBooked) {
+        this.name = name;
+        this.phone = phone;
+        this.gender = gender;
+        this.bookedNumber = bookedNumber;
+        this.imageURL = imageURL;
+        this.alreadyBooked = alreadyBooked;
     }
 
     public UserProfile(String name, boolean alreadyBooked) {
