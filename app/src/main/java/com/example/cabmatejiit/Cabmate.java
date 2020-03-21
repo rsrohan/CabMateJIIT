@@ -2,7 +2,28 @@ package com.example.cabmatejiit;
 
 public class Cabmate {
 
-    String phone, numberofseats, source, destination;
+    String phone;
+    String numberofseats;
+    String source;
+    String destination;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Cabmate(String phone, String numberofseats, String source, String destination, String name) {
+        this.phone = phone;
+        this.numberofseats = numberofseats;
+        this.source = source;
+        this.destination = destination;
+        this.name = name;
+    }
+
+    String name;
 
     public Cabmate(String phone, String numberofseats, String source, String destination) {
         this.phone = phone;

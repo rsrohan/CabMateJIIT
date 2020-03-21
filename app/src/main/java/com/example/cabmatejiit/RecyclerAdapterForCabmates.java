@@ -24,9 +24,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class RecyclerAdapterForCabmates extends RecyclerView.Adapter<RecyclerAdapterForCabmates.MyHolder> {
 
     Context context;
-    ArrayList<UserProfile> cabmates;
+    ArrayList<Cabmate> cabmates;
 
-    public RecyclerAdapterForCabmates(Context context, ArrayList<UserProfile> cabmates) {
+    public RecyclerAdapterForCabmates(Context context, ArrayList<Cabmate> cabmates) {
         this.context = context;
         this.cabmates = cabmates;
     }
@@ -39,9 +39,9 @@ public class RecyclerAdapterForCabmates extends RecyclerView.Adapter<RecyclerAda
     @Override
     public void onBindViewHolder(@NonNull final MyHolder holder, int position) {
 
-        UserProfile userProfile = cabmates.get(position);
+        Cabmate Cabmate = cabmates.get(position);
 //        try{
-//            Glide.with(context).asBitmap().load(userProfile.getImageURL()).addListener(new RequestListener<Bitmap>() {
+//            Glide.with(context).asBitmap().load(Cabmate.getImageURL()).addListener(new RequestListener<Bitmap>() {
 //                @Override
 //                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
 //                    return false;
@@ -57,7 +57,7 @@ public class RecyclerAdapterForCabmates extends RecyclerView.Adapter<RecyclerAda
 //
 //        }
 
-        holder.name.setText(userProfile.getName());
+        holder.name.setText(Cabmate.getName());
 
 
     }

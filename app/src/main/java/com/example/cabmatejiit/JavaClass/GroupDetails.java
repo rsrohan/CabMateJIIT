@@ -1,6 +1,7 @@
 package com.example.cabmatejiit.JavaClass;
 
 import com.example.cabmatejiit.Cabmate;
+import com.example.cabmatejiit.Message;
 
 import java.util.ArrayList;
 
@@ -8,6 +9,38 @@ public class GroupDetails {
 
     int numberOfVacantSeats;
     ArrayList<Cabmate> cabbies;
+    ArrayList<Message> messages;
+
+    String uniqueGroupName;
+
+    public String getUniqueGroupName() {
+        return uniqueGroupName;
+    }
+
+    public void setUniqueGroupName(String uniqueGroupName) {
+        this.uniqueGroupName = uniqueGroupName;
+    }
+
+    public GroupDetails(int numberOfVacantSeats, ArrayList<Cabmate> cabbies, ArrayList<Message> messages, String uniqueGroupName) {
+        this.numberOfVacantSeats = numberOfVacantSeats;
+        this.cabbies = cabbies;
+        this.messages = messages;
+        this.uniqueGroupName = uniqueGroupName;
+    }
+
+    public ArrayList<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(ArrayList<Message> messages) {
+        this.messages = messages;
+    }
+
+    public GroupDetails(int numberOfVacantSeats, ArrayList<Cabmate> cabbies, ArrayList<Message> messages) {
+        this.numberOfVacantSeats = numberOfVacantSeats;
+        this.cabbies = cabbies;
+        this.messages = messages;
+    }
 
     public GroupDetails() {
     }

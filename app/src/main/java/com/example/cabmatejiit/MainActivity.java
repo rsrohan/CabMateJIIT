@@ -18,6 +18,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.cabmatejiit.JavaClass.GroupDetails;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     String username;
     private String TAG = "MainActivity";
     private DatabaseReference userDetailsReference;
+    private DatabaseReference userDetailsReference2;
+    private Cabmate cabbie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,22 +59,31 @@ public class MainActivity extends AppCompatActivity {
         dest = findViewById(R.id.destination);
         findCab = findViewById(R.id.findCab);
         seatNumber = findViewById(R.id.numberofseats);
-        newGroup=findViewById(R.id.newGroup);
+        newGroup = findViewById(R.id.newGroup);
         user = FirebaseAuth.getInstance().getCurrentUser();
 
 
-//        final ProgressDialog pd = new ProgressDialog(this);
-//        pd.setMessage("Please wait...");
-//        pd.setCancelable(false);
-//        try {
-//            pd.show();
-//        } catch (Exception e) {
-//        }
+        cabbie=new Cabmate();
+        userDetailsReference = FirebaseDatabase.getInstance().getReference("USER_DETAILS")
+                .child(user.getPhoneNumber()).child("pathBooked");
 
-        setLogOutButton();
+        userDetailsReference2 = FirebaseDatabase.getInstance().getReference("USER_DETAILS")
+                .child(user.getPhoneNumber()).child("alreadyBooked");
+        FirebaseDatabase.getInstance().getReference("USER_DETAILS").child(user.getPhoneNumber()).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                cabbie.setName(dataSnapshot.getValue(String.class));
+                setLogOutButton();
 
-        setBookingButton();
+                setBookingButton();
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                Toast.makeText(MainActivity.this, ""+databaseError, Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
     }
@@ -94,10 +107,14 @@ public class MainActivity extends AppCompatActivity {
                         && dest.getSelectedItemPosition() != 0
                         && seatNumber.getSelectedItemPosition() != 0
                         && !source.getSelectedItem().toString().equals(dest.getSelectedItem().toString())) {
-                    String sourceS = source.getSelectedItem().toString();
-                    String destinationS = dest.getSelectedItem().toString();
+                    String sourceS = source.getSelectedItem().toString().trim();
+                    String destinationS = dest.getSelectedItem().toString().trim();
                     String seatNumberS = seatNumber.getSelectedItem().toString();
-                    Cabmate cabbie = new Cabmate(user.getPhoneNumber(), seatNumberS, sourceS, destinationS);
+                    //cabbie = new Cabmate(user.getPhoneNumber(), seatNumberS, sourceS, destinationS);
+                    cabbie.setPhone(user.getPhoneNumber());
+                    cabbie.setNumberofseats(seatNumberS);
+                    cabbie.setSource(sourceS);
+                    cabbie.setDestination(destinationS);
 
                     checkForSeats(cabbie);
 
@@ -111,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkForSeats(final Cabmate cabbie) {
-        Log.d(TAG, "checkForSeats: "+cabbie);
+        Log.d(TAG, "checkForSeats: " + cabbie);
         referenceToBookCab = FirebaseDatabase
                 .getInstance()
                 .getReference("BOOKINGS").child(cabbie.getSource() + "-" + cabbie.getDestination());
@@ -120,19 +137,17 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
 
                 ArrayList<GroupDetails> groupDetails = new ArrayList<>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren())
-                {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     GroupDetails groupDetails1 = snapshot.getValue(GroupDetails.class);
                     groupDetails.add(groupDetails1);
                 }
                 RecyclerView recyclerView = findViewById(R.id.recyclerView);
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                if (groupDetails.size()>0)
-                {
+                if (groupDetails.size() > 0) {
 
                     recyclerView.setVisibility(View.VISIBLE);
-                    RecyclerAdapterForGroupFinding recyclerAdapterForGroupFinding = new RecyclerAdapterForGroupFinding(getApplicationContext(), groupDetails, cabbie, referenceToBookCab);
+                    RecyclerAdapterForGroupFinding recyclerAdapterForGroupFinding = new RecyclerAdapterForGroupFinding(getApplicationContext(), groupDetails, cabbie, referenceToBookCab, userDetailsReference);
                     recyclerAdapterForGroupFinding.notifyDataSetChanged();
                     recyclerView.setAdapter(recyclerAdapterForGroupFinding);
 
@@ -143,11 +158,28 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         ArrayList<Cabmate> cabmateArrayList = new ArrayList<>();
                         cabmateArrayList.add(cabbie);
-                        GroupDetails g = new GroupDetails(4-Integer.parseInt(cabbie.getNumberofseats()), cabmateArrayList);
-                        referenceToBookCab.child(String.valueOf(dataSnapshot.getChildrenCount()+1)).setValue(g);
+                        GroupDetails g = new GroupDetails(4 - Integer.parseInt(cabbie.getNumberofseats()), cabmateArrayList);
+                        String key = String.valueOf(System.currentTimeMillis());
+                        referenceToBookCab.child(key).setValue(g);
+                        userDetailsReference2.setValue(true);
+                        userDetailsReference.setValue(referenceToBookCab.child(String.valueOf(key)).toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                startActivity(new Intent(getApplicationContext(), ChatActivity.class));
+                                finish();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                userDetailsReference2.setValue(false);
+                                Toast.makeText(MainActivity.this, ""+e, Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+
+
                     }
                 });
-
 
 
             }

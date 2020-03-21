@@ -3,8 +3,8 @@
     <string-array name="locations">
         <item>Select</item>
 <!--        <item>Botanical Garden</item>-->
-        <item>JIIT Sec: 62</item>
-        <item>JIIT Sec: 128</item>
+        <item>JIIT62</item>
+        <item>JIIT128</item>
     </string-array>
     <string-array name="gender">
         <item>Select Gender</item>

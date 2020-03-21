@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cabmatejiit.JavaClass.GroupDetails;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,22 +41,19 @@ import java.util.Objects;
 public class ChatActivity extends AppCompatActivity {
 
     DatabaseReference chatReference, cabmateDetailsReference;
-    DatabaseReference referenceToGroup;
     ArrayList<Message> messagesInGroup;
     private RecyclerView recyclerView;
     FirebaseUser user;
     EditText messageBox;
     final List<FirebaseTextMessage> conversation = new ArrayList<>();
 
-    ArrayList<UserProfile> cabmatesAfterLeavingGroup;
+    ArrayList<Cabmate> cabmatesAfterLeavingGroup;
 
     ImageButton sendButton;
     private String TAG = "ChatActivity";
     private RecyclerView recyclerView2;
     private RecyclerView recyclerView3;
-    private String ref;
     private DatabaseReference referenceToUserDetails;
-    private DatabaseReference referenceToLiveBookings;
 
     UserProfile userProfileDetails;
     @Override
@@ -76,22 +74,20 @@ public class ChatActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         checkifusernull();
 
-        ref = getIntent().getStringExtra("reference");
-
         referenceToUserDetails = FirebaseDatabase
                 .getInstance()
                 .getReference("USER_DETAILS")
                 .child(user.getPhoneNumber());
-        referenceToLiveBookings = FirebaseDatabase.getInstance().getReference("LIVE_BOOKINGS");
-        referenceToGroup = FirebaseDatabase.getInstance().getReference("GROUPS");
-        chatReference = referenceToGroup.child(Objects.requireNonNull(ref)).child("CHATS");
-        cabmateDetailsReference = referenceToGroup.child(Objects.requireNonNull(ref)).child("CABMATES");
 
         userProfileDetails=new UserProfile();
         referenceToUserDetails.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userProfileDetails = dataSnapshot.getValue(UserProfile.class);
+                Log.d(TAG, "onCreate: "+userProfileDetails.getPathBooked());
+                setCabmateDetails();
+
+                setChatWindow();
             }
 
             @Override
@@ -99,31 +95,38 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-        cabmateDetailsReference.addValueEventListener(new ValueEventListener() {
-            ArrayList<UserProfile> cabmates = new ArrayList<>();
 
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    cabmates.add(snapshot.getValue(UserProfile.class));
+            public void onClick(View v) {
+                if (!messageBox.getText().toString().equals("")) {
+                    Message m = new Message(messageBox.getText().toString(), userProfileDetails.getName(), user.getPhoneNumber());
+
+                    messagesInGroup.add(m);
+
+
+                    chatReference.setValue(messagesInGroup);
+                    messageBox.setText("");
+                    try {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                        if (imm != null) {
+                            imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+                        }
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
+
+
                 }
-                Log.d(TAG, "onDataChange: " + cabmates);
-
-                RecyclerAdapterForCabmates recyclerAdapterForCabmates = new RecyclerAdapterForCabmates(getApplicationContext(), cabmates);
-                recyclerAdapterForCabmates.notifyDataSetChanged();
-                recyclerView2.setAdapter(recyclerAdapterForCabmates);
-
-                cabmatesAfterLeavingGroup = cabmates;
-                Toast.makeText(ChatActivity.this, ""+cabmatesAfterLeavingGroup.size(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
 
+    }
+
+    private void setChatWindow() {
+        chatReference=FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).child("CHATS");
         chatReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -206,32 +209,33 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-        sendButton.setOnClickListener(new View.OnClickListener() {
+    private void setCabmateDetails() {
+        cabmateDetailsReference = FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).child("cabbies");
+        cabmateDetailsReference.addValueEventListener(new ValueEventListener() {
+            ArrayList<Cabmate> cabmates = new ArrayList<>();
+
             @Override
-            public void onClick(View v) {
-                if (!messageBox.getText().toString().equals("")) {
-                    Message m = new Message(messageBox.getText().toString(), getIntent().getStringExtra("username"), user.getPhoneNumber());
-
-                    messagesInGroup.add(m);
-
-
-                    chatReference.setValue(messagesInGroup);
-                    messageBox.setText("");
-                    try {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                        if (imm != null) {
-                            imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
-                        }
-                    } catch (Exception e) {
-                        // TODO: handle exception
-                    }
-
-
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    cabmates.add(snapshot.getValue(Cabmate.class));
                 }
+                Log.d(TAG, "onDataChange: " + cabmates);
+
+                RecyclerAdapterForCabmates recyclerAdapterForCabmates = new RecyclerAdapterForCabmates(getApplicationContext(), cabmates);
+                recyclerAdapterForCabmates.notifyDataSetChanged();
+                recyclerView2.setAdapter(recyclerAdapterForCabmates);
+
+                cabmatesAfterLeavingGroup = cabmates;
+                Toast.makeText(ChatActivity.this, ""+cabmatesAfterLeavingGroup.size(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
-
 
     }
 
@@ -274,65 +278,44 @@ public class ChatActivity extends AppCompatActivity {
                     .setMessage("Are you sure you want to leave this group?")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            // Continue with delete operation
-                            for (int i = 0; i < cabmatesAfterLeavingGroup.size(); i++) {
-
-                                if (cabmatesAfterLeavingGroup.get(i).getPhone().equals(user.getPhoneNumber())) {
-                                    cabmatesAfterLeavingGroup.remove(i);
-                                    //recyclerAdapterForCabmates.notifyDataSetChanged();
-                                    if (ref.equals(user.getPhoneNumber()) && cabmatesAfterLeavingGroup.size()>0) {
-                                        final DatabaseReference databaseReferenceAfterLeaving = referenceToGroup
-                                                .child(cabmatesAfterLeavingGroup.get(0).getPhone());
-                                        referenceToGroup.child(ref).addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                                databaseReferenceAfterLeaving.setValue(dataSnapshot.getValue());
-                                                for (int i = 0; i < cabmatesAfterLeavingGroup.size(); i++) {
-                                                    cabmatesAfterLeavingGroup.get(i).setBookedNumber(cabmatesAfterLeavingGroup.get(0).getPhone());
-                                                }
-                                                referenceToGroup.child(cabmatesAfterLeavingGroup.get(0).getPhone())
-                                                        .child("CABMATES")
-                                                        .setValue(cabmatesAfterLeavingGroup);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                            }
-                                        });
-
-                                    }else{
-                                        referenceToGroup.child(ref).setValue(null);
-                                    }
-                                    userProfileDetails.setAlreadyBooked(false);
-                                    userProfileDetails.setBookedNumber("");
-                                    referenceToUserDetails
-                                            .setValue(userProfileDetails);
-
-
-                                    referenceToLiveBookings.child(userProfileDetails.getPathBooked()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            for (DataSnapshot snapshot:dataSnapshot.getChildren())
+                            FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    GroupDetails groupDetails= dataSnapshot.getValue(GroupDetails.class);
+                                    for (int i=0;i<groupDetails.getCabbies().size();i++)
+                                    {
+                                        if (groupDetails.getCabbies().get(i).getPhone().equals(userProfileDetails.getPhone()))
+                                        {
+                                            groupDetails.setNumberOfVacantSeats(groupDetails.getNumberOfVacantSeats()+Integer.parseInt(groupDetails.getCabbies().get(i).getNumberofseats()));
+                                            groupDetails.getCabbies().remove(i);
+                                            if (groupDetails.getNumberOfVacantSeats()==4)
                                             {
-                                                if (snapshot.child("phone").getValue(String.class).equals(user.getPhoneNumber()))
-                                                {
-                                                    referenceToLiveBookings.child(userProfileDetails.getPathBooked()).child(snapshot.getKey()).setValue(null);
-                                                    Log.d(TAG, "onDataChange: "+snapshot.getKey());
-                                                }
+                                                FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).setValue(null);
+
+                                            }else{
+                                                FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).setValue(groupDetails);
+
                                             }
+                                            userProfileDetails.setPathBooked("null");
+                                            userProfileDetails.setAlreadyBooked(false);
+                                            FirebaseDatabase.getInstance().getReference("USER_DETAILS").child(user.getPhoneNumber()).setValue(userProfileDetails).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                                    finish();
+                                                }
+                                            });
                                         }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-                                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                    finish();
+                                    }
                                 }
-                            }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+
 
                         }
                     })
