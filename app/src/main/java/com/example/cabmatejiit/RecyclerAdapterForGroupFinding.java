@@ -49,7 +49,8 @@ public class RecyclerAdapterForGroupFinding extends RecyclerView.Adapter<Recycle
 
         final GroupDetails GroupDetails = groups.get(position);
 
-        holder.numberOfSeats.setText(String.valueOf(GroupDetails.getNumberOfVacantSeats()));
+        holder.grpId.setText("Group Id:"+GroupDetails.getUniqueGroupName());
+        holder.numberOfSeats.setText("Vacant Seats: "+String.valueOf(GroupDetails.getNumberOfVacantSeats()));
         holder.joinGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,12 +94,13 @@ public class RecyclerAdapterForGroupFinding extends RecyclerView.Adapter<Recycle
 
     public class MyHolder extends RecyclerView.ViewHolder {
 
-        TextView numberOfSeats;
+        TextView numberOfSeats, grpId;
         Button joinGroup;
         public MyHolder(@NonNull View itemView) {
             super(itemView);
             numberOfSeats = itemView.findViewById(R.id.numberofseats);
             joinGroup = itemView.findViewById(R.id.joinGroup);
+            grpId=itemView.findViewById(R.id.grpId);
         }
     }
 }

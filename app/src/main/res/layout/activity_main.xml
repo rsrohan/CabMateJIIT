@@ -4,71 +4,148 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
+    android:gravity="center"
+    android:background="@drawable/sidenavbar2"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="initiate a new Group"
-        android:id="@+id/newGroup"
-        android:visibility="gone"/>
-    <androidx.recyclerview.widget.RecyclerView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/recyclerView"
-        android:visibility="gone"/>
-    <TextView
-        android:id="@+id/sourcetext"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/source" />
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/topLayout">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create new Group"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@android:color/white"
+            android:background="@drawable/sidenavbar"
+            android:id="@+id/newGroup"
+            android:padding="12dp"
+            android:layout_margin="12dp"
+            android:textStyle="bold"
+            android:visibility="gone"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/noGroupsFound"
+            android:padding="16dp"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@android:color/black"
+            android:textStyle="bold|italic"
+            android:visibility="gone"
+            android:text="No groups available ! You can initiate making a group by your own."/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recyclerView"
+            android:visibility="gone"/>
+    </LinearLayout>
 
-    <Spinner
-        android:id="@+id/source"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:layout_margin="12dp"
-        android:entries="@array/locations"/>
 
-    <TextView
-        android:id="@+id/desttext"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/destination" />
+        android:layout_margin="4dp"
+        android:id="@+id/bottomLayout"
+        android:background="@drawable/sidenavbar"
+        >
+        <TextView
+            android:id="@+id/sourcetext"
+            android:layout_alignParentStart="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_margin="8dp"
+            android:text="@string/source" />
 
-    <Spinner
-        android:id="@+id/destination"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:layout_margin="12dp"
-        android:entries="@array/locations"/>
-    <TextView
-        android:id="@+id/numberofseatstext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Number of Seats" />
+        <Spinner
+            android:id="@+id/source"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:background="@drawable/bg"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/sourcetext"
+            android:layout_margin="12dp"
+            android:entries="@array/locations"/>
 
-    <Spinner
-        android:id="@+id/numberofseats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:layout_margin="12dp"
-        android:entries="@array/seats"/>
+        <TextView
+            android:id="@+id/desttext"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:padding="8dp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_margin="8dp"
+            android:layout_height="wrap_content"
+            android:text="@string/destination" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/find_my_cabmates"
-        android:id="@+id/findCab"/>
+        <Spinner
+            android:id="@+id/destination"
+            android:layout_width="wrap_content"
+            android:layout_below="@id/desttext"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/bg"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:layout_margin="12dp"
+            android:entries="@array/locations"/>
+        <TextView
+            android:id="@+id/numberofseatstext"
+            android:layout_width="wrap_content"
+            android:layout_below="@id/destination"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:text="Number of Seats" />
+
+        <Spinner
+            android:id="@+id/numberofseats"
+            android:layout_below="@id/numberofseatstext"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:background="@drawable/bg"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp"
+            android:entries="@array/seats"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/find_my_cabmates"
+            android:textColor="@android:color/white"
+            android:layout_below="@id/numberofseats"
+            android:layout_centerHorizontal="true"
+            android:padding="12dp"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_margin="12dp"
+            android:background="@drawable/sidenavbar"
+            android:id="@+id/findCab"/>
+
+    </RelativeLayout>
+
+    
+
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="logout"
+        android:visibility="gone"
         android:id="@+id/logout"/>
 </LinearLayout>

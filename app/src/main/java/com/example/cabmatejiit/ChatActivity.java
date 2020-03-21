@@ -228,7 +228,7 @@ public class ChatActivity extends AppCompatActivity {
                 recyclerView2.setAdapter(recyclerAdapterForCabmates);
 
                 cabmatesAfterLeavingGroup = cabmates;
-                Toast.makeText(ChatActivity.this, ""+cabmatesAfterLeavingGroup.size(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ChatActivity.this, ""+cabmatesAfterLeavingGroup.size(), Toast.LENGTH_SHORT).show();
             }
 
             @Override

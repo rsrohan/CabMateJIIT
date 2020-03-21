@@ -6,8 +6,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="3"
-    android:paddingStart="@dimen/paddingUniversal"
-    android:paddingEnd="@dimen/paddingUniversal"
+    android:background="@drawable/sidenavbar2"
+    android:paddingStart="4dp"
+    android:paddingEnd="4dp"
     tools:context=".ChatActivity">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -48,39 +49,52 @@
     </RelativeLayout>
 
 
-    <LinearLayout
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        android:id="@+id/bottomLayout"
-        android:weightSum="3"
-        android:layout_marginBottom="2dp"
-        android:background="@drawable/bg"
-        android:padding="4dp">
+        app:cardCornerRadius="12dp"
+        android:layout_marginBottom="4dp"
 
-        <EditText
-            android:id="@+id/messageBox"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:enabled="true"
-            android:background="@android:color/transparent"
-            android:hint="Start typing"
-            android:layout_gravity="bottom"
-            android:gravity="center"
-            android:inputType="textCapSentences"
-            android:layout_weight="3"
-            />
+        android:fadingEdge="vertical">
 
-        <ImageButton
-            android:id="@+id/sendBtn"
-            android:layout_width="wrap_content"
-            android:src="@drawable/ic_send_black_24dp"
-            android:background="@android:color/transparent"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            />
-    </LinearLayout>
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            android:id="@+id/bottomLayout"
+            android:weightSum="3"
+            android:padding="4dp">
+
+
+            <EditText
+                android:id="@+id/messageBox"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:enabled="true"
+                android:background="@android:color/transparent"
+                android:hint="Start typing"
+                android:layout_gravity="bottom"
+                android:gravity="center_vertical"
+                android:paddingStart="12dp"
+                android:inputType="textCapSentences"
+                android:layout_weight="3"
+                />
+
+            <ImageButton
+                android:id="@+id/sendBtn"
+                android:layout_width="wrap_content"
+                android:src="@drawable/ic_send_black_24dp"
+                android:background="@android:color/transparent"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
 
 
 

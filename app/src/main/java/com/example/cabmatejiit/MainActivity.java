@@ -1,16 +1,20 @@
 package com.example.cabmatejiit;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -73,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 cabbie.setName(dataSnapshot.getValue(String.class));
-                setLogOutButton();
+                //setLogOutButton();
 
                 setBookingButton();
             }
@@ -135,6 +139,9 @@ public class MainActivity extends AppCompatActivity {
         referenceToBookCab.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+                findViewById(R.id.bottomLayout).setVisibility(View.GONE);
+                findViewById(R.id.topLayout).setVisibility(View.VISIBLE);
+
 
                 ArrayList<GroupDetails> groupDetails = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -147,9 +154,15 @@ public class MainActivity extends AppCompatActivity {
                 if (groupDetails.size() > 0) {
 
                     recyclerView.setVisibility(View.VISIBLE);
+                    findViewById(R.id.noGroupsFound).setVisibility(View.GONE);
+
                     RecyclerAdapterForGroupFinding recyclerAdapterForGroupFinding = new RecyclerAdapterForGroupFinding(getApplicationContext(), groupDetails, cabbie, referenceToBookCab, userDetailsReference);
                     recyclerAdapterForGroupFinding.notifyDataSetChanged();
                     recyclerView.setAdapter(recyclerAdapterForGroupFinding);
+
+                }else{
+                    findViewById(R.id.noGroupsFound).setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
 
                 }
                 newGroup.setVisibility(View.VISIBLE);
@@ -160,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
                         cabmateArrayList.add(cabbie);
                         GroupDetails g = new GroupDetails(4 - Integer.parseInt(cabbie.getNumberofseats()), cabmateArrayList);
                         String key = String.valueOf(System.currentTimeMillis());
+                        g.setUniqueGroupName(key);
                         referenceToBookCab.child(key).setValue(g);
                         userDetailsReference2.setValue(true);
                         userDetailsReference.setValue(referenceToBookCab.child(String.valueOf(key)).toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -173,6 +187,9 @@ public class MainActivity extends AppCompatActivity {
                             public void onFailure(@NonNull Exception e) {
                                 userDetailsReference2.setValue(false);
                                 Toast.makeText(MainActivity.this, ""+e, Toast.LENGTH_SHORT).show();
+                                findViewById(R.id.bottomLayout).setVisibility(View.VISIBLE);
+                                findViewById(R.id.topLayout).setVisibility(View.GONE);
+
 
                             }
                         });
@@ -213,5 +230,25 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_act, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+
+        if (id == R.id.icon) {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 }
