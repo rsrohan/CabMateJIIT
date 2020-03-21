@@ -4,11 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="initiate a new Group"
+        android:id="@+id/newGroup"
+        android:visibility="gone"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recyclerView"
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/sourcetext"
         android:layout_width="wrap_content"
@@ -36,6 +47,19 @@
         android:padding="8dp"
         android:layout_margin="12dp"
         android:entries="@array/locations"/>
+    <TextView
+        android:id="@+id/numberofseatstext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Number of Seats" />
+
+    <Spinner
+        android:id="@+id/numberofseats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_margin="12dp"
+        android:entries="@array/seats"/>
 
     <Button
         android:layout_width="wrap_content"

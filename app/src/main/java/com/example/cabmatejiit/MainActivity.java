@@ -2,6 +2,8 @@ package com.example.cabmatejiit;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -15,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.cabmatejiit.JavaClass.GroupDetails;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -26,12 +29,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    Spinner source, dest;
-    Button findCab;
+    Spinner source, dest, seatNumber;
+    Button findCab, newGroup;
     FirebaseUser user;
     DatabaseReference referenceToBookCab;
 
@@ -50,74 +54,22 @@ public class MainActivity extends AppCompatActivity {
         source = findViewById(R.id.source);
         dest = findViewById(R.id.destination);
         findCab = findViewById(R.id.findCab);
-
+        seatNumber = findViewById(R.id.numberofseats);
+        newGroup=findViewById(R.id.newGroup);
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(user==null)
-        {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-        }else{
-            final ProgressDialog pd = new ProgressDialog(this);
-            pd.setMessage("Please wait...");
-            pd.setCancelable(false);
-            try{
-                pd.show();
-            }catch (Exception e){
-            }
-            userDetailsReference = FirebaseDatabase
-                    .getInstance()
-                    .getReference("USER_DETAILS")
-                    .child(Objects.requireNonNull(user.getPhoneNumber()));
-            referenceToBookCab = FirebaseDatabase
-                    .getInstance()
-                    .getReference("LIVE_BOOKINGS");
 
-            setLogOutButton();
-            
-            userDetailsReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//        final ProgressDialog pd = new ProgressDialog(this);
+//        pd.setMessage("Please wait...");
+//        pd.setCancelable(false);
+//        try {
+//            pd.show();
+//        } catch (Exception e) {
+//        }
 
-                    try{
-                        userProfileInformations = dataSnapshot.getValue(UserProfile.class);
-                        assert userProfileInformations != null;
-                        username = userProfileInformations.getName();
-                        if (userProfileInformations.isAlreadyBooked())
-                        {
-                            pd.dismiss();
-                            startActivity(new Intent(getApplicationContext(), ChatActivity.class)
-                                    .putExtra("reference", userProfileInformations.getBookedNumber()).putExtra("username", userProfileInformations.getName()));
-                            finish();
+        setLogOutButton();
 
-                        }else{
-                            pd.dismiss();
-                            setBookingButton();
-
-                        }
-                    }catch (Exception e){
-                        Log.d(TAG, "onDataChange: "+e);
-                        pd.dismiss();
-
-                        if (userProfileInformations==null){
-                            ProfileDialog profileDialog = new ProfileDialog(MainActivity.this, null, MainActivity.this);
-                            profileDialog.setCancelable(false);
-                            profileDialog.show();
-                        }
-                        setBookingButton();
-                    }
-                    
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
-
-        }
+        setBookingButton();
 
 
 
@@ -133,94 +85,90 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void setBookingButton()
-    {
+
+    private void setBookingButton() {
         findCab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ArrayList<UserProfile> cabmates = new ArrayList<>();
-                if (source.getSelectedItemPosition()!=0 && dest.getSelectedItemPosition()!=0)
-                {
-                    referenceToBookCab= referenceToBookCab
-                            .child(source.getSelectedItem().toString()+"-"+dest.getSelectedItem().toString());
-                    Log.d(TAG, "onClick: "+referenceToBookCab.toString());
+                if (source.getSelectedItemPosition() != 0
+                        && dest.getSelectedItemPosition() != 0
+                        && seatNumber.getSelectedItemPosition() != 0
+                        && !source.getSelectedItem().toString().equals(dest.getSelectedItem().toString())) {
+                    String sourceS = source.getSelectedItem().toString();
+                    String destinationS = dest.getSelectedItem().toString();
+                    String seatNumberS = seatNumber.getSelectedItem().toString();
+                    Cabmate cabbie = new Cabmate(user.getPhoneNumber(), seatNumberS, sourceS, destinationS);
 
-                    referenceToBookCab.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    checkForSeats(cabbie);
 
-                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                                cabmates.add(snapshot.getValue(UserProfile.class));
-                            }
 
-                            cabmates.add(userProfileInformations);
-
-                            if (cabmates.size()==4){
-                                referenceToBookCab.setValue(null);
-                            }else{
-                                referenceToBookCab.setValue(cabmates);
-                            }
-
-                            //final UserProfile userProfile = new UserProfile(username, true);
-
-                            //userProfile.setPhone(user.getPhoneNumber());
-                            userProfileInformations.setAlreadyBooked(true);
-                            userProfileInformations.setBookedNumber(cabmates.get(0).getPhone());
-                            userProfileInformations.setPathBooked(source.getSelectedItem().toString()+"-"+dest.getSelectedItem().toString());
-
-                            userDetailsReference.setValue(userProfileInformations);
-
-                            final DatabaseReference cabmateReference = FirebaseDatabase.getInstance()
-                                    .getReference("GROUPS")
-                                    .child(cabmates.get(0).getPhone())
-                                    .child("CABMATES");
-
-                            cabmateReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                                ArrayList<UserProfile> cabmates = new ArrayList<>();
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot snapshot: dataSnapshot.getChildren())
-                                    {
-                                        cabmates.add(snapshot.getValue(UserProfile.class));
-                                    }
-                                    cabmates.add(userProfileInformations);
-                                    cabmateReference.setValue(cabmates);
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-                            startActivity(new Intent(getApplicationContext(), ChatActivity.class)
-                                    .putExtra("reference", cabmates.get(0).getPhone()).putExtra("username", username));
-                            finish();
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-                }else{
+                } else {
                     Toast.makeText(MainActivity.this, "Check Source and Destination", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
     }
+
+    private void checkForSeats(final Cabmate cabbie) {
+        Log.d(TAG, "checkForSeats: "+cabbie);
+        referenceToBookCab = FirebaseDatabase
+                .getInstance()
+                .getReference("BOOKINGS").child(cabbie.getSource() + "-" + cabbie.getDestination());
+        referenceToBookCab.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+
+                ArrayList<GroupDetails> groupDetails = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren())
+                {
+                    GroupDetails groupDetails1 = snapshot.getValue(GroupDetails.class);
+                    groupDetails.add(groupDetails1);
+                }
+                RecyclerView recyclerView = findViewById(R.id.recyclerView);
+                recyclerView.setHasFixedSize(true);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                if (groupDetails.size()>0)
+                {
+
+                    recyclerView.setVisibility(View.VISIBLE);
+                    RecyclerAdapterForGroupFinding recyclerAdapterForGroupFinding = new RecyclerAdapterForGroupFinding(getApplicationContext(), groupDetails, cabbie, referenceToBookCab);
+                    recyclerAdapterForGroupFinding.notifyDataSetChanged();
+                    recyclerView.setAdapter(recyclerAdapterForGroupFinding);
+
+                }
+                newGroup.setVisibility(View.VISIBLE);
+                newGroup.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<Cabmate> cabmateArrayList = new ArrayList<>();
+                        cabmateArrayList.add(cabbie);
+                        GroupDetails g = new GroupDetails(4-Integer.parseInt(cabbie.getNumberofseats()), cabmateArrayList);
+                        referenceToBookCab.child(String.valueOf(dataSnapshot.getChildrenCount()+1)).setValue(g);
+                    }
+                });
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     public static final int PICK_IMAGE = 100;
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == PICK_IMAGE && resultCode==RESULT_OK) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
 
-            if (user.getPhoneNumber()!=null)
-            {
+            if (user.getPhoneNumber() != null) {
                 StorageReference imageStorageReference = FirebaseStorage.getInstance().getReference("DISPLAY_PICTURES");
-                imageStorageReference=imageStorageReference.child(user.getUid());
+                imageStorageReference = imageStorageReference.child(user.getUid());
 
                 Uri selectedImage = data.getData();
                 //todo

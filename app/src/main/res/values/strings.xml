@@ -13,4 +13,8 @@
     <string name="source">SOURCE</string>
     <string name="destination">DESTINATION</string>
     <string name="find_my_cabmates">find my cabmates</string>
+
+    <string name="title_activity_splashcreen">SplashcreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

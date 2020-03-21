@@ -1,15 +1,17 @@
 package com.example.cabmatejiit;
 
-class Cabmate {
+public class Cabmate {
 
-    String phone, name;
+    String phone, numberofseats, source, destination;
 
-    public Cabmate() {
+    public Cabmate(String phone, String numberofseats, String source, String destination) {
+        this.phone = phone;
+        this.numberofseats = numberofseats;
+        this.source = source;
+        this.destination = destination;
     }
 
-    public Cabmate(String phone, String name) {
-        this.phone = phone;
-        this.name = name;
+    public Cabmate() {
     }
 
     public String getPhone() {
@@ -20,11 +22,27 @@ class Cabmate {
         this.phone = phone;
     }
 
-    public String getName() {
-        return name;
+    public String getNumberofseats() {
+        return numberofseats;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNumberofseats(String numberofseats) {
+        this.numberofseats = numberofseats;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
     }
 }
