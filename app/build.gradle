@@ -42,6 +42,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-ml-natural-language:22.0.0'
     implementation 'com.google.firebase:firebase-ml-natural-language-smart-reply-model:20.0.7'
     implementation 'com.android.support:cardview-v7:29.0.0'
+    implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
+
 
 
 }

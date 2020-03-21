@@ -1,10 +1,17 @@
 package com.example.cabmatejiit;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.dynamicanimation.animation.DynamicAnimation;
+import androidx.dynamicanimation.animation.SpringAnimation;
+import androidx.dynamicanimation.animation.SpringForce;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +19,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -26,6 +34,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.Objects;
+
+import static androidx.dynamicanimation.animation.SpringForce.DAMPING_RATIO_HIGH_BOUNCY;
+import static androidx.dynamicanimation.animation.SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY;
+import static androidx.dynamicanimation.animation.SpringForce.STIFFNESS_MEDIUM;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -113,6 +125,12 @@ public class SplashcreenActivity extends AppCompatActivity {
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
 
+        //mContentView.animate().scaleX(0f).scaleY(0f);
+        mContentView.animate().scaleX(1f).scaleY(1f).setDuration(1000);
+        //setAlphaAnimation(mContentView);
+        //getHighBounceScaleX(mContentView, 6f, 1f, DAMPING_RATIO_HIGH_BOUNCY, STIFFNESS_MEDIUM).start();
+        //getHighBounceScaleY(mContentView, 6f, 1f, DAMPING_RATIO_MEDIUM_BOUNCY, STIFFNESS_MEDIUM).start();
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             startActivity(new Intent(this, LoginActivity.class));
@@ -187,7 +205,7 @@ public class SplashcreenActivity extends AppCompatActivity {
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
-        delayedHide(100);
+        delayedHide(00);
     }
 
     private void toggle() {
@@ -253,5 +271,53 @@ public class SplashcreenActivity extends AppCompatActivity {
 
 
         }
+    }
+    private SpringForce getSpringForce(float dampingRatio, float stiffness, float finalPosition) {
+        SpringForce force = new SpringForce();
+        force.setDampingRatio(dampingRatio).setStiffness(stiffness);
+        force.setFinalPosition(finalPosition);
+        return force;
+    }
+
+
+
+    private float getVelocity(float velocityDp) {
+        //Get Velocity in pixels per second from dp per second
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, velocityDp,
+                getResources().getDisplayMetrics());
+    }
+    private SpringAnimation getHighBounceScaleX(View view, float velocityDp, float finalPosition, float DAMPING, float STIFFNESS) {
+        final SpringAnimation anim = new SpringAnimation(view, DynamicAnimation.SCALE_X);
+        anim.setStartVelocity(getVelocity(velocityDp));
+        anim.animateToFinalPosition(finalPosition);
+        anim.setSpring(getSpringForce(DAMPING, STIFFNESS, finalPosition));
+        return anim;
+    }
+
+
+    private SpringAnimation getHighBounceScaleY(View view, float velocityDp, float finalPosition, float DAMPING, float STIFFNESS) {
+        final SpringAnimation anim = new SpringAnimation(view, DynamicAnimation.SCALE_Y);
+        anim.setStartVelocity(getVelocity(velocityDp));
+        anim.animateToFinalPosition(finalPosition);
+        anim.setSpring(getSpringForce(DAMPING, STIFFNESS, finalPosition));
+        return anim;
+    }
+    public void setAlphaAnimation(View v) {
+        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(v, "alpha",  1f, .1f);
+        fadeOut.setDuration(0);
+        ObjectAnimator fadeIn = ObjectAnimator.ofFloat(v, "alpha", .1f, 1f);
+        fadeIn.setDuration(500);
+
+        final AnimatorSet mAnimationSet = new AnimatorSet();
+
+        mAnimationSet.play(fadeIn).after(fadeOut);
+
+        mAnimationSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+            }
+        });
+        mAnimationSet.start();
     }
 }

@@ -110,6 +110,7 @@ public class ProfileDialog extends Dialog implements DialogInterface.OnClickList
                             final UserProfile userProfile = new UserProfile();
                             userProfile.setPhone(user.getPhoneNumber());
                             userProfile.setName(username.getText().toString().toUpperCase());
+                            userProfile.setGender(gender.getSelectedItem().toString());
                             try{
                                 imageReference.child(user.getUid()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override

@@ -17,18 +17,21 @@
         android:textColor="#000000"
         android:textStyle="bold"
         android:gravity="center"
+        android:layout_marginBottom="12dp"
         android:padding="8dp"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:id="@+id/displayPicture"
+        android:visibility="gone"
         android:layout_margin="8dp"
         android:src="@mipmap/person"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:text="Tap to update display picture"
         android:layout_marginBottom="8dp"/>
     <EditText
@@ -42,9 +45,10 @@
         />
     <Spinner
         android:id="@+id/gender"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
+        android:background="@drawable/bg"
         android:layout_margin="12dp"
         android:entries="@array/gender"/>
     <Button
@@ -53,7 +57,7 @@
         android:id="@+id/save"
         android:layout_margin="8dp"
         android:padding="4dp"
-        android:background="@drawable/buttons_colorprimary_bg"
+        android:background="@drawable/sidenavbar"
         android:gravity="center"
         android:textColor="@android:color/white"
         android:text="@string/cont"/>
