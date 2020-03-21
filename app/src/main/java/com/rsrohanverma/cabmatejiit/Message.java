@@ -1,4 +1,4 @@
-package com.example.cabmatejiit;
+package com.rsrohanverma.cabmatejiit;
 
 public class Message {
 

@@ -1,7 +1,7 @@
-package com.example.cabmatejiit.JavaClass;
+package com.rsrohanverma.cabmatejiit.JavaClass;
 
-import com.example.cabmatejiit.Cabmate;
-import com.example.cabmatejiit.Message;
+import com.rsrohanverma.cabmatejiit.Cabmate;
+import com.rsrohanverma.cabmatejiit.Message;
 
 import java.util.ArrayList;
 

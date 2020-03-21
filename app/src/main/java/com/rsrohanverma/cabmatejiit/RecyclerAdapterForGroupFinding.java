@@ -1,4 +1,4 @@
-package com.example.cabmatejiit;
+package com.rsrohanverma.cabmatejiit;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,15 +12,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.cabmatejiit.JavaClass.GroupDetails;
+import com.rsrohanverma.cabmatejiit.JavaClass.GroupDetails;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 

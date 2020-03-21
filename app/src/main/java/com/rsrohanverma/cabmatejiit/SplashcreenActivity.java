@@ -1,4 +1,4 @@
-package com.example.cabmatejiit;
+package com.rsrohanverma.cabmatejiit;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -18,7 +18,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,10 +33,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.Objects;
-
-import static androidx.dynamicanimation.animation.SpringForce.DAMPING_RATIO_HIGH_BOUNCY;
-import static androidx.dynamicanimation.animation.SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY;
-import static androidx.dynamicanimation.animation.SpringForce.STIFFNESS_MEDIUM;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.

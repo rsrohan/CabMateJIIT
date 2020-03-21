@@ -42,6 +42,43 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011644179352:android:fa83c29d6ea38353aa41ed",
+        "android_client_info": {
+          "package_name": "com.rsrohanverma.cabmatejiit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1011644179352-cfpipevmtbt01ekat13abnfd8cc0bflv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rsrohanverma.cabmatejiit",
+            "certificate_hash": "e4ff16046f24b2619d29c1cd3f02bfc1f59bc096"
+          }
+        },
+        {
+          "client_id": "1011644179352-fqgjiuk8bfgeei4mu9troq7btio2nlco.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZ0kx_EtADS3CBYcTD0HavXB6hi20N1bo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1011644179352-fqgjiuk8bfgeei4mu9troq7btio2nlco.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
