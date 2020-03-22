@@ -16,6 +16,9 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.rsrohanverma.cabmatejiit.JavaClass.GroupDetails;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference userDetailsReference;
     private DatabaseReference userDetailsReference2;
     private Cabmate cabbie;
+    private AdView adView;
+    private AdRequest adRequest, adRequest2;
+    private AdView adView2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +65,14 @@ public class MainActivity extends AppCompatActivity {
         newGroup = findViewById(R.id.newGroup);
         user = FirebaseAuth.getInstance().getCurrentUser();
 
+        adView = findViewById(R.id.bannerAd);
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544/6300978111");
+        adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
+        adView2 = findViewById(R.id.bannerAd2);
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544/6300978111");
+        adRequest2 = new AdRequest.Builder().build();
+        adView2.loadAd(adRequest2);
 
         cabbie=new Cabmate();
         userDetailsReference = FirebaseDatabase.getInstance().getReference("USER_DETAILS")

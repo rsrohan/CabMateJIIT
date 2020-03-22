@@ -17,6 +17,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.rsrohanverma.cabmatejiit.JavaClass.GroupDetails;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,6 +58,9 @@ public class ChatActivity extends AppCompatActivity {
     private DatabaseReference referenceToUserDetails;
 
     UserProfile userProfileDetails;
+    private AdView adView;
+    private AdRequest adRequest;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +68,10 @@ public class ChatActivity extends AppCompatActivity {
         messageBox = findViewById(R.id.messageBox);
         sendButton = findViewById(R.id.sendBtn);
 
+        adView = findViewById(R.id.bannerAd);
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544/6300978111");
+        adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
         cabmatesAfterLeavingGroup = new ArrayList<>();
         messagesInGroup = new ArrayList<>();
 
