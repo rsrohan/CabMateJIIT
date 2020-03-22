@@ -1,10 +1,14 @@
 package com.rsrohanverma.cabmatejiit;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -51,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     private AdView adView;
     private AdRequest adRequest, adRequest2;
     private AdView adView2;
+    private ProgressDialog dialog;
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+        activity=this;
         source = findViewById(R.id.source);
         dest = findViewById(R.id.destination);
         findCab = findViewById(R.id.findCab);
@@ -65,6 +72,13 @@ public class MainActivity extends AppCompatActivity {
         newGroup = findViewById(R.id.newGroup);
         user = FirebaseAuth.getInstance().getCurrentUser();
 
+        dialog = ProgressDialog.show(MainActivity.this, "", "Please Wait...");
+        dialog.setCancelable(false);
+        try {
+            dialog.show();
+
+        } catch (Exception Ignored) {
+        }
         adView = findViewById(R.id.bannerAd);
         MobileAds.initialize(this, "ca-app-pub-3940256099942544/6300978111");
         adRequest = new AdRequest.Builder().build();
@@ -74,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         adRequest2 = new AdRequest.Builder().build();
         adView2.loadAd(adRequest2);
 
-        cabbie=new Cabmate();
+        cabbie = new Cabmate();
         userDetailsReference = FirebaseDatabase.getInstance().getReference("USER_DETAILS")
                 .child(user.getPhoneNumber()).child("pathBooked");
 
@@ -86,13 +100,23 @@ public class MainActivity extends AppCompatActivity {
                 cabbie.setName(dataSnapshot.getValue(String.class));
                 //setLogOutButton();
 
+                try {
+                    dialog.dismiss();
+
+                } catch (Exception Ignored) {
+                }
                 setBookingButton();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                try {
+                    dialog.dismiss();
 
-                Toast.makeText(MainActivity.this, ""+databaseError, Toast.LENGTH_SHORT).show();
+                } catch (Exception Ignored) {
+                }
+
+                Toast.makeText(MainActivity.this, "" + databaseError, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -118,6 +142,12 @@ public class MainActivity extends AppCompatActivity {
                         && dest.getSelectedItemPosition() != 0
                         && seatNumber.getSelectedItemPosition() != 0
                         && !source.getSelectedItem().toString().equals(dest.getSelectedItem().toString())) {
+
+                    try {
+                        dialog.show();
+
+                    } catch (Exception Ignored) {
+                    }
                     String sourceS = source.getSelectedItem().toString().trim();
                     String destinationS = dest.getSelectedItem().toString().trim();
                     String seatNumberS = seatNumber.getSelectedItem().toString();
@@ -163,11 +193,21 @@ public class MainActivity extends AppCompatActivity {
                     recyclerView.setVisibility(View.VISIBLE);
                     findViewById(R.id.noGroupsFound).setVisibility(View.GONE);
 
-                    RecyclerAdapterForGroupFinding recyclerAdapterForGroupFinding = new RecyclerAdapterForGroupFinding(getApplicationContext(), groupDetails, cabbie, referenceToBookCab, userDetailsReference);
+                    try {
+                        dialog.dismiss();
+
+                    } catch (Exception Ignored) {
+                    }
+                    RecyclerAdapterForGroupFinding recyclerAdapterForGroupFinding = new RecyclerAdapterForGroupFinding(getApplicationContext(), groupDetails, cabbie, referenceToBookCab, userDetailsReference, activity);
                     recyclerAdapterForGroupFinding.notifyDataSetChanged();
                     recyclerView.setAdapter(recyclerAdapterForGroupFinding);
 
-                }else{
+                } else {
+                    try {
+                        dialog.dismiss();
+
+                    } catch (Exception Ignored) {
+                    }
                     findViewById(R.id.noGroupsFound).setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.GONE);
 
@@ -176,6 +216,12 @@ public class MainActivity extends AppCompatActivity {
                 newGroup.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        newGroup.setClickable(false);
+                        try {
+                            dialog.show();
+
+                        } catch (Exception Ignored) {
+                        }
                         ArrayList<Cabmate> cabmateArrayList = new ArrayList<>();
                         cabmateArrayList.add(cabbie);
                         GroupDetails g = new GroupDetails(4 - Integer.parseInt(cabbie.getNumberofseats()), cabmateArrayList);
@@ -186,14 +232,26 @@ public class MainActivity extends AppCompatActivity {
                         userDetailsReference.setValue(referenceToBookCab.child(String.valueOf(key)).toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
+                                try {
+                                    dialog.dismiss();
+
+                                } catch (Exception Ignored) {
+                                }
                                 startActivity(new Intent(getApplicationContext(), ChatActivity.class));
                                 finish();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
+                                try {
+                                    dialog.dismiss();
+
+                                } catch (Exception Ignored) {
+                                }
+                                newGroup.setClickable(true);
+
                                 userDetailsReference2.setValue(false);
-                                Toast.makeText(MainActivity.this, ""+e, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "" + e, Toast.LENGTH_SHORT).show();
                                 findViewById(R.id.bottomLayout).setVisibility(View.VISIBLE);
                                 findViewById(R.id.topLayout).setVisibility(View.GONE);
 
@@ -238,6 +296,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -251,10 +310,25 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (id == R.id.icon) {
-            FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            finish();
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Warning")
+                    .setMessage("Are you sure you want to LogOut?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            FirebaseAuth.getInstance().signOut();
+                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                            finish();
+
+
+
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
         }
+
         return super.onOptionsItemSelected(item);
 
     }

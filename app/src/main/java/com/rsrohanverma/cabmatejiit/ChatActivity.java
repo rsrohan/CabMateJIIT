@@ -134,7 +134,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setChatWindow() {
-        chatReference=FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).child("CHATS");
+        chatReference=FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).child("chats");
         chatReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -188,7 +188,7 @@ public class ChatActivity extends AppCompatActivity {
                                                 Log.d(TAG, "onSuccess: " + replyText);
                                                 arrayList.add(replyText);
                                             }
-                                            RecyclerAdapterForSmartReply recyclerAdapterForSmartReply = new RecyclerAdapterForSmartReply(getApplicationContext(), arrayList, chatReference, getIntent().getStringExtra("username"), user.getPhoneNumber(), messagesInGroup);
+                                            RecyclerAdapterForSmartReply recyclerAdapterForSmartReply = new RecyclerAdapterForSmartReply(getApplicationContext(), arrayList, chatReference, userProfileDetails.getName(), user.getPhoneNumber(), messagesInGroup);
                                             recyclerAdapterForSmartReply.notifyDataSetChanged();
                                             recyclerView3.setAdapter(recyclerAdapterForSmartReply);
                                         }
@@ -290,6 +290,7 @@ public class ChatActivity extends AppCompatActivity {
                             FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                                     GroupDetails groupDetails= dataSnapshot.getValue(GroupDetails.class);
                                     for (int i=0;i<groupDetails.getCabbies().size();i++)
                                     {

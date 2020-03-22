@@ -1,5 +1,7 @@
 package com.rsrohanverma.cabmatejiit;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -28,13 +30,15 @@ public class RecyclerAdapterForGroupFinding extends RecyclerView.Adapter<Recycle
     ArrayList<GroupDetails> groups;
     Cabmate cabbie;
     DatabaseReference referenceToBookCab, userDetailsReference;
+    Activity activity;
 
-    public RecyclerAdapterForGroupFinding(Context context, ArrayList<GroupDetails> groups, Cabmate cabmate, DatabaseReference reference, DatabaseReference reference2) {
+    public RecyclerAdapterForGroupFinding(Context context, ArrayList<GroupDetails> groups, Cabmate cabmate, DatabaseReference reference, DatabaseReference reference2, Activity activity2) {
         this.context = context;
         this.groups = groups;
         this.cabbie=cabmate;
         this.referenceToBookCab=reference;
         this.userDetailsReference=reference2;
+        this.activity=activity2;
     }
 
     @NonNull
@@ -52,6 +56,15 @@ public class RecyclerAdapterForGroupFinding extends RecyclerView.Adapter<Recycle
         holder.joinGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final ProgressDialog dialog =
+                        ProgressDialog.show(activity, "", "Please Wait...");
+                dialog.setCancelable(false);
+                try {
+                    dialog.show();
+
+                } catch (Exception Ignored) {
+                }
+
                 int numberOfSeatsAvalable =  groups.get(position).getNumberOfVacantSeats();
                 if (numberOfSeatsAvalable>=Integer.parseInt(cabbie.getNumberofseats()))
                 {
@@ -63,12 +76,22 @@ public class RecyclerAdapterForGroupFinding extends RecyclerView.Adapter<Recycle
                     userDetailsReference.setValue(referenceToBookCab.child(groups.get(position).getUniqueGroupName()).toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            try {
+                                dialog.dismiss();
+
+                            } catch (Exception Ignored) {
+                            }
                             context.startActivity(new Intent(context, ChatActivity.class).addFlags(FLAG_ACTIVITY_NEW_TASK));
 
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            try {
+                                dialog.dismiss();
+
+                            } catch (Exception Ignored) {
+                            }
                             FirebaseDatabase.getInstance().getReference("USER_DETAILS").child(cabbie.getPhone()).child("alreadyBooked").setValue(false);
                             Toast.makeText(context, ""+e, Toast.LENGTH_SHORT).show();
 

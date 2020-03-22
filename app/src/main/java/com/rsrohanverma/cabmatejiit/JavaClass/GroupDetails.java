@@ -9,7 +9,7 @@ public class GroupDetails {
 
     int numberOfVacantSeats;
     ArrayList<Cabmate> cabbies;
-    ArrayList<Message> messages;
+    ArrayList<Message> CHATS;
 
     String uniqueGroupName;
 
@@ -24,22 +24,22 @@ public class GroupDetails {
     public GroupDetails(int numberOfVacantSeats, ArrayList<Cabmate> cabbies, ArrayList<Message> messages, String uniqueGroupName) {
         this.numberOfVacantSeats = numberOfVacantSeats;
         this.cabbies = cabbies;
-        this.messages = messages;
+        this.CHATS = messages;
         this.uniqueGroupName = uniqueGroupName;
     }
 
-    public ArrayList<Message> getMessages() {
-        return messages;
+    public ArrayList<Message> getCHATS() {
+        return CHATS;
     }
 
-    public void setMessages(ArrayList<Message> messages) {
-        this.messages = messages;
+    public void setCHATS(ArrayList<Message> CHATS) {
+        this.CHATS = CHATS;
     }
 
-    public GroupDetails(int numberOfVacantSeats, ArrayList<Cabmate> cabbies, ArrayList<Message> messages) {
+    public GroupDetails(int numberOfVacantSeats, ArrayList<Cabmate> cabbies, ArrayList<Message> CHATS) {
         this.numberOfVacantSeats = numberOfVacantSeats;
         this.cabbies = cabbies;
-        this.messages = messages;
+        this.CHATS = CHATS;
     }
 
     public GroupDetails() {
