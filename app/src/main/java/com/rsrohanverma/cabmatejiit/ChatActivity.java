@@ -49,7 +49,6 @@ public class ChatActivity extends AppCompatActivity {
     EditText messageBox;
     final List<FirebaseTextMessage> conversation = new ArrayList<>();
 
-    ArrayList<Cabmate> cabmatesAfterLeavingGroup;
 
     ImageButton sendButton;
     private String TAG = "ChatActivity";
@@ -72,7 +71,7 @@ public class ChatActivity extends AppCompatActivity {
         MobileAds.initialize(this, "ca-app-pub-3940256099942544/6300978111");
         adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
-        cabmatesAfterLeavingGroup = new ArrayList<>();
+        //cabmatesAfterLeavingGroup = new ArrayList<>();
         messagesInGroup = new ArrayList<>();
 
 
@@ -223,10 +222,11 @@ public class ChatActivity extends AppCompatActivity {
     private void setCabmateDetails() {
         cabmateDetailsReference = FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).child("cabbies");
         cabmateDetailsReference.addValueEventListener(new ValueEventListener() {
-            ArrayList<Cabmate> cabmates = new ArrayList<>();
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<Cabmate> cabmates = new ArrayList<>();
+
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     cabmates.add(snapshot.getValue(Cabmate.class));
                 }
@@ -236,7 +236,7 @@ public class ChatActivity extends AppCompatActivity {
                 recyclerAdapterForCabmates.notifyDataSetChanged();
                 recyclerView2.setAdapter(recyclerAdapterForCabmates);
 
-                cabmatesAfterLeavingGroup = cabmates;
+                //cabmatesAfterLeavingGroup = cabmates;
                 //Toast.makeText(ChatActivity.this, ""+cabmatesAfterLeavingGroup.size(), Toast.LENGTH_SHORT).show();
             }
 

@@ -50,6 +50,7 @@ public class RecyclerAdapterForCabmates extends RecyclerView.Adapter<RecyclerAda
 //        }
 
         holder.name.setText(Cabmate.getName());
+        holder.seats.setText(Cabmate.getNumberofseats()+" Seats");
 
 
     }
@@ -62,11 +63,12 @@ public class RecyclerAdapterForCabmates extends RecyclerView.Adapter<RecyclerAda
     public class MyHolder extends RecyclerView.ViewHolder {
 
         CircleImageView circleImageView;
-        TextView name;
+        TextView name, seats;
         public MyHolder(@NonNull View itemView) {
             super(itemView);
             circleImageView = itemView.findViewById(R.id.displayPicture);
             name = itemView.findViewById(R.id.cabmatename);
+            seats = itemView.findViewById(R.id.seats);
         }
     }
 }

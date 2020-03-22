@@ -57,7 +57,8 @@ public class RecyclerAdapterForGroupFinding extends RecyclerView.Adapter<Recycle
                 {
                     groups.get(position).getCabbies().add(cabbie);
                     groups.get(position).setNumberOfVacantSeats(numberOfSeatsAvalable-Integer.parseInt(cabbie.getNumberofseats()));
-                    referenceToBookCab.setValue(groups);
+
+                    referenceToBookCab.child(groups.get(position).getUniqueGroupName()).setValue(groups.get(position));
                     FirebaseDatabase.getInstance().getReference("USER_DETAILS").child(cabbie.getPhone()).child("alreadyBooked").setValue(true);
                     userDetailsReference.setValue(referenceToBookCab.child(groups.get(position).getUniqueGroupName()).toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
