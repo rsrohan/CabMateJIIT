@@ -11,7 +11,7 @@
         android:largeHeap="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.rsrohanverma.cabmatejiit.SplashcreenActivity"
+            android:name="com.rsrohanverma.cabmatejiit.Activity.SplashcreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/FullscreenTheme">
@@ -21,9 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.rsrohanverma.cabmatejiit.ChatActivity" />
-        <activity android:name="com.rsrohanverma.cabmatejiit.LoginActivity" />
-        <activity android:name="com.rsrohanverma.cabmatejiit.MainActivity">
+        <activity android:name="com.rsrohanverma.cabmatejiit.Activity.ChatActivity" />
+        <activity android:name="com.rsrohanverma.cabmatejiit.Activity.LoginActivity" />
+        <activity android:name="com.rsrohanverma.cabmatejiit.Activity.MainActivity">
 
         </activity>
         <meta-data

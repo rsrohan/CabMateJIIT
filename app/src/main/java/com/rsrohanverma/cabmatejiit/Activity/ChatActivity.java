@@ -1,4 +1,4 @@
-package com.rsrohanverma.cabmatejiit;
+package com.rsrohanverma.cabmatejiit.Activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -37,6 +37,7 @@ import com.rsrohanverma.cabmatejiit.JavaClass.Cabmate;
 import com.rsrohanverma.cabmatejiit.JavaClass.GroupDetails;
 import com.rsrohanverma.cabmatejiit.JavaClass.Message;
 import com.rsrohanverma.cabmatejiit.JavaClass.UserProfile;
+import com.rsrohanverma.cabmatejiit.R;
 import com.rsrohanverma.cabmatejiit.RecyclerAdapter.RecyclerAdapterForCabmates;
 import com.rsrohanverma.cabmatejiit.RecyclerAdapter.RecyclerAdapterForChat;
 import com.rsrohanverma.cabmatejiit.RecyclerAdapter.RecyclerAdapterForSmartReply;

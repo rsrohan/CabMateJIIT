@@ -14,7 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.rsrohanverma.cabmatejiit.ChatActivity;
+import com.rsrohanverma.cabmatejiit.Activity.ChatActivity;
 import com.rsrohanverma.cabmatejiit.JavaClass.Cabmate;
 import com.rsrohanverma.cabmatejiit.JavaClass.GroupDetails;
 import com.google.android.gms.tasks.OnFailureListener;

@@ -1,4 +1,4 @@
-package com.rsrohanverma.cabmatejiit;
+package com.rsrohanverma.cabmatejiit.Activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -28,6 +28,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.rsrohanverma.cabmatejiit.Dialog.ProfileDialog;
 import com.rsrohanverma.cabmatejiit.JavaClass.UserProfile;
+import com.rsrohanverma.cabmatejiit.R;
 
 import java.util.Objects;
 

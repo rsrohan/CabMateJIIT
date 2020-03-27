@@ -1,4 +1,4 @@
-package com.rsrohanverma.cabmatejiit;
+package com.rsrohanverma.cabmatejiit.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,6 +16,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.rsrohanverma.cabmatejiit.Dialog.OTPDialog;
 import com.rsrohanverma.cabmatejiit.Dialog.ProfileDialog;
+import com.rsrohanverma.cabmatejiit.R;
 
 import java.util.regex.Pattern;
 

@@ -1,4 +1,4 @@
-package com.rsrohanverma.cabmatejiit;
+package com.rsrohanverma.cabmatejiit.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -37,6 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.rsrohanverma.cabmatejiit.JavaClass.UserProfile;
+import com.rsrohanverma.cabmatejiit.R;
 import com.rsrohanverma.cabmatejiit.RecyclerAdapter.RecyclerAdapterForGroupFinding;
 
 import java.util.ArrayList;
