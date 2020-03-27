@@ -33,7 +33,13 @@ import com.google.firebase.ml.naturallanguage.smartreply.FirebaseSmartReply;
 import com.google.firebase.ml.naturallanguage.smartreply.FirebaseTextMessage;
 import com.google.firebase.ml.naturallanguage.smartreply.SmartReplySuggestion;
 import com.google.firebase.ml.naturallanguage.smartreply.SmartReplySuggestionResult;
+import com.rsrohanverma.cabmatejiit.JavaClass.Cabmate;
 import com.rsrohanverma.cabmatejiit.JavaClass.GroupDetails;
+import com.rsrohanverma.cabmatejiit.JavaClass.Message;
+import com.rsrohanverma.cabmatejiit.JavaClass.UserProfile;
+import com.rsrohanverma.cabmatejiit.RecyclerAdapter.RecyclerAdapterForCabmates;
+import com.rsrohanverma.cabmatejiit.RecyclerAdapter.RecyclerAdapterForChat;
+import com.rsrohanverma.cabmatejiit.RecyclerAdapter.RecyclerAdapterForSmartReply;
 
 import java.util.ArrayList;
 import java.util.List;

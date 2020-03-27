@@ -1,8 +1,5 @@
 package com.rsrohanverma.cabmatejiit.JavaClass;
 
-import com.rsrohanverma.cabmatejiit.Cabmate;
-import com.rsrohanverma.cabmatejiit.Message;
-
 import java.util.ArrayList;
 
 public class GroupDetails {

@@ -1,4 +1,4 @@
-package com.rsrohanverma.cabmatejiit;
+package com.rsrohanverma.cabmatejiit.RecyclerAdapter;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -14,11 +14,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.rsrohanverma.cabmatejiit.ChatActivity;
+import com.rsrohanverma.cabmatejiit.JavaClass.Cabmate;
 import com.rsrohanverma.cabmatejiit.JavaClass.GroupDetails;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.rsrohanverma.cabmatejiit.R;
 
 import java.util.ArrayList;
 

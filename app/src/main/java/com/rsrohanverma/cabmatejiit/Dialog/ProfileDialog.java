@@ -1,4 +1,4 @@
-package com.rsrohanverma.cabmatejiit;
+package com.rsrohanverma.cabmatejiit.Dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -28,6 +28,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
+import com.rsrohanverma.cabmatejiit.JavaClass.UserProfile;
+import com.rsrohanverma.cabmatejiit.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
