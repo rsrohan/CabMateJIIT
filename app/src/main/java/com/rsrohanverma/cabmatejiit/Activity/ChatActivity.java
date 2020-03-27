@@ -1,14 +1,17 @@
 package com.rsrohanverma.cabmatejiit.Activity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -18,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,7 +46,9 @@ import com.rsrohanverma.cabmatejiit.RecyclerAdapter.RecyclerAdapterForCabmates;
 import com.rsrohanverma.cabmatejiit.RecyclerAdapter.RecyclerAdapterForChat;
 import com.rsrohanverma.cabmatejiit.RecyclerAdapter.RecyclerAdapterForSmartReply;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
@@ -54,6 +60,7 @@ public class ChatActivity extends AppCompatActivity {
     EditText messageBox;
     final List<FirebaseTextMessage> conversation = new ArrayList<>();
 
+    TextView groupId;
 
     ImageButton sendButton;
     private String TAG = "ChatActivity";
@@ -64,6 +71,8 @@ public class ChatActivity extends AppCompatActivity {
     UserProfile userProfileDetails;
     private AdView adView;
     private AdRequest adRequest;
+    Activity activity;
+    private InterstitialAd interstitialAd;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -71,15 +80,29 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         messageBox = findViewById(R.id.messageBox);
         sendButton = findViewById(R.id.sendBtn);
+        groupId = findViewById(R.id.text);
+
+        activity=this;
 
         adView = findViewById(R.id.bannerAd);
-        MobileAds.initialize(this, "ca-app-pub-3940256099942544/6300978111");
+        MobileAds.initialize(this, "ca-app-pub-7233191134291345/2555714992");
         adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
         //cabmatesAfterLeavingGroup = new ArrayList<>();
         messagesInGroup = new ArrayList<>();
 
 
+        interstitialAd = new InterstitialAd(getApplicationContext());
+        interstitialAd.setAdUnitId("ca-app-pub-7233191134291345/9719603739");
+        interstitialAd.loadAd(adRequest);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (interstitialAd.isLoaded()) {
+                    interstitialAd.show();
+                }
+            }
+        }, 3000);
 
         setupRecyclerViews();
 
@@ -99,8 +122,20 @@ public class ChatActivity extends AppCompatActivity {
                 userProfileDetails = dataSnapshot.getValue(UserProfile.class);
                 Log.d(TAG, "onCreate: "+userProfileDetails.getPathBooked());
                 setCabmateDetails();
-
                 setChatWindow();
+                FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).child("uniqueGroupName").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String id = dataSnapshot.getValue(String.class);
+                        groupId.setText("Group Id: "+id);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
@@ -114,21 +149,36 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!messageBox.getText().toString().equals("")) {
-                    Message m = new Message(messageBox.getText().toString(), userProfileDetails.getName(), user.getPhoneNumber());
+                    final Message m = new Message(messageBox.getText().toString(), userProfileDetails.getName(), user.getPhoneNumber());
 
-                    messagesInGroup.add(m);
+                    String currentDateAndTime = new SimpleDateFormat("HH:mm").format(new Date());
+                    m.setTimestamp(currentDateAndTime);
 
 
-                    chatReference.setValue(messagesInGroup);
+
+                    chatReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            ArrayList<Message> messageArrayList=new ArrayList<>();
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                messageArrayList.add(snapshot.getValue(Message.class));
+                                Log.d(TAG, "onDataChange: " + messageArrayList.size());
+
+                            }
+                            messageArrayList.add(m);
+                            chatReference.setValue(messageArrayList);
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                    //chatReference.setValue(messagesInGroup);
                     messageBox.setText("");
-//                    try {
-//                        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-//                        if (imm != null) {
-//                            imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
-//                        }
-//                    } catch (Exception e) {
-//                        // TODO: handle exception
-//                    }
+
 
 
                 }
@@ -237,7 +287,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
                 Log.d(TAG, "onDataChange: " + cabmates);
 
-                RecyclerAdapterForCabmates recyclerAdapterForCabmates = new RecyclerAdapterForCabmates(getApplicationContext(), cabmates);
+                RecyclerAdapterForCabmates recyclerAdapterForCabmates = new RecyclerAdapterForCabmates(getApplicationContext(), cabmates, activity);
                 recyclerAdapterForCabmates.notifyDataSetChanged();
                 recyclerView2.setAdapter(recyclerAdapterForCabmates);
 

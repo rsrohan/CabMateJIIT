@@ -2,9 +2,20 @@ package com.rsrohanverma.cabmatejiit.JavaClass;
 
 public class Message {
 
-    String message;
+    String message="-";
     String name;
     String number;
+
+
+
+    String timestamp;
+
+    public Message(String message, String name, String number, String timestamp) {
+        this.message = message;
+        this.name = name;
+        this.number = number;
+        this.timestamp = timestamp;
+    }
 
     public String getNumber() {
         return number;
@@ -44,4 +55,11 @@ public class Message {
     public Message() {
     }
 
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
 }

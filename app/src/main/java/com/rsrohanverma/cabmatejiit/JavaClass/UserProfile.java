@@ -8,16 +8,20 @@ public class UserProfile {
     String bookedNumber;
     String imageURL;
     boolean alreadyBooked;
+    boolean isBlocked;
+    String pathBooked;
 
-    public String getPathBooked() {
-        return pathBooked;
-    }
-
-    public void setPathBooked(String pathBooked) {
+    public UserProfile(String name, String phone, String gender, String bookedNumber, String imageURL, boolean alreadyBooked, boolean isBlocked, String pathBooked) {
+        this.name = name;
+        this.phone = phone;
+        this.gender = gender;
+        this.bookedNumber = bookedNumber;
+        this.imageURL = imageURL;
+        this.alreadyBooked = alreadyBooked;
+        this.isBlocked = isBlocked;
         this.pathBooked = pathBooked;
     }
 
-    String pathBooked;
 
 
     public String getImageURL() {
@@ -90,5 +94,19 @@ public class UserProfile {
 
     public void setAlreadyBooked(boolean alreadyBooked) {
         this.alreadyBooked = alreadyBooked;
+    }
+    public boolean isIsBlocked() {
+        return isBlocked;
+    }
+
+    public void setIsBlocked(boolean blocked) {
+        isBlocked = blocked;
+    }
+    public String getPathBooked() {
+        return pathBooked;
+    }
+
+    public void setPathBooked(String pathBooked) {
+        this.pathBooked = pathBooked;
     }
 }

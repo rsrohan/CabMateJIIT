@@ -51,5 +51,4 @@ dependencies {
     implementation 'com.uber.sdk:rides-android:0.5.3'
 
 
-
 }

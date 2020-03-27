@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         ads:adSize="BANNER"
         android:layout_gravity="center_horizontal"
-        ads:adUnitId="ca-app-pub-3940256099942544/6300978111"/>
+        ads:adUnitId="ca-app-pub-7233191134291345/2555714992"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
@@ -27,12 +27,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cabmates"
+            android:text="GroupId"
             android:gravity="center"
-            android:textStyle="bold"
             android:id="@+id/text"
-            android:visibility="gone"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/white"/>
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

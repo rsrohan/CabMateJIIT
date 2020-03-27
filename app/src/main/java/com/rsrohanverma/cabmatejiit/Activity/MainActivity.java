@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.rsrohanverma.cabmatejiit.JavaClass.Cabmate;
 import com.rsrohanverma.cabmatejiit.JavaClass.GroupDetails;
@@ -40,7 +42,10 @@ import com.rsrohanverma.cabmatejiit.JavaClass.UserProfile;
 import com.rsrohanverma.cabmatejiit.R;
 import com.rsrohanverma.cabmatejiit.RecyclerAdapter.RecyclerAdapterForGroupFinding;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private AdView adView2;
     private ProgressDialog dialog;
     private Activity activity;
+    private InterstitialAd interstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,13 +90,24 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception Ignored) {
         }
         adView = findViewById(R.id.bannerAd);
-        MobileAds.initialize(this, "ca-app-pub-3940256099942544/6300978111");
+        MobileAds.initialize(this, "ca-app-pub-7233191134291345/6835863059");
         adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
         adView2 = findViewById(R.id.bannerAd2);
-        MobileAds.initialize(this, "ca-app-pub-3940256099942544/6300978111");
+        MobileAds.initialize(this, "ca-app-pub-7233191134291345/3443412953");
         adRequest2 = new AdRequest.Builder().build();
         adView2.loadAd(adRequest2);
+        interstitialAd = new InterstitialAd(getApplicationContext());
+        interstitialAd.setAdUnitId("ca-app-pub-7233191134291345/4467277051");
+        interstitialAd.loadAd(adRequest);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (interstitialAd.isLoaded()) {
+                    interstitialAd.show();
+                }
+            }
+        }, 3000);
 
         cabbie = new Cabmate();
         userDetailsReference = FirebaseDatabase.getInstance().getReference("USER_DETAILS")
@@ -160,6 +177,14 @@ public class MainActivity extends AppCompatActivity {
                     cabbie.setNumberofseats(seatNumberS);
                     cabbie.setSource(sourceS);
                     cabbie.setDestination(destinationS);
+
+                    //Calendar calendar = Calendar.getInstance();
+
+                    String currentDateAndTime = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss").format(new Date());
+
+
+                    cabbie.setTimestamp(currentDateAndTime);
+
 
                     checkForSeats(cabbie);
 
@@ -231,6 +256,8 @@ public class MainActivity extends AppCompatActivity {
                         GroupDetails g = new GroupDetails(4 - Integer.parseInt(cabbie.getNumberofseats()), cabmateArrayList);
                         String key = String.valueOf(System.currentTimeMillis());
                         g.setUniqueGroupName(key);
+                        String currentDateAndTime = new SimpleDateFormat("dd-MM-yyyy_HH:mm").format(new Date());
+                        g.setTimestamp(currentDateAndTime);
                         referenceToBookCab.child(key).setValue(g);
                         userDetailsReference2.setValue(true);
                         userDetailsReference.setValue(referenceToBookCab.child(String.valueOf(key)).toString()).addOnSuccessListener(new OnSuccessListener<Void>() {

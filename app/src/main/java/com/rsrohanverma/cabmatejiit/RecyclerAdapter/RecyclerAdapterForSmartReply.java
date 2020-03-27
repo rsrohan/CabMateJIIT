@@ -17,7 +17,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.rsrohanverma.cabmatejiit.JavaClass.Message;
 import com.rsrohanverma.cabmatejiit.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class RecyclerAdapterForSmartReply extends RecyclerView.Adapter<RecyclerAdapterForSmartReply.MyHolder>{
 
@@ -53,7 +55,9 @@ public class RecyclerAdapterForSmartReply extends RecyclerView.Adapter<RecyclerA
             @Override
             public void onClick(View v) {
                 Message m = new Message(reply.get(position), username ,number);
+                String currentDateAndTime = new SimpleDateFormat("HH:mm").format(new Date());
 
+                m.setTimestamp(currentDateAndTime);
                 messages.add(m);
 
 

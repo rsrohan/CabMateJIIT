@@ -45,7 +45,7 @@ public class RecyclerAdapterForChat extends RecyclerView.Adapter<RecyclerAdapter
 
         if (!message.getNumber().equals(userPhone))
         {
-            holder.sender.setText(message.getName());
+            holder.sender.setText(message.getName()+"\nAt: "+message.getTimestamp());
             holder.receivedTxt.setText(message.getMessage());
             setAlphaAnimation(holder.receivedTxt);
             setAlphaAnimation(holder.sender);

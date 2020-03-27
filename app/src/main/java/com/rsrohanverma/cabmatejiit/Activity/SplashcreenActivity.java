@@ -129,7 +129,7 @@ public class SplashcreenActivity extends AppCompatActivity {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         }else {
-            DatabaseReference userDetailsReference = FirebaseDatabase
+            final DatabaseReference userDetailsReference = FirebaseDatabase
                     .getInstance()
                     .getReference("USER_DETAILS")
                     .child(Objects.requireNonNull(user.getPhoneNumber()));
@@ -141,14 +141,24 @@ public class SplashcreenActivity extends AppCompatActivity {
                     try {
                         userProfileInformations = dataSnapshot.getValue(UserProfile.class);
                         assert userProfileInformations != null;
-                        if (userProfileInformations.isAlreadyBooked()) {
-                            startActivity(new Intent(getApplicationContext(), ChatActivity.class));
+                        //userProfileInformations.isBlocked()
+                        if (userProfileInformations.isIsBlocked())
+                        {
+
+                            startActivity(new Intent(getApplicationContext(), BlockedActivity.class));
                             finish();
 
-                        } else {
-                            startActivity(new Intent(SplashcreenActivity.this, MainActivity.class));
-                            finish();
+                        }else{
+                            if (userProfileInformations.isAlreadyBooked()) {
+                                startActivity(new Intent(getApplicationContext(), ChatActivity.class));
+                                finish();
+
+                            } else {
+                                startActivity(new Intent(SplashcreenActivity.this, MainActivity.class));
+                                finish();
+                            }
                         }
+
                     } catch (Exception e) {
 
 

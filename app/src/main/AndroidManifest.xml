@@ -2,16 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rsrohanverma.cabmatejiit">
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
-        android:largeHeap="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activity.BlockedActivity"></activity>
         <activity
-            android:name="com.rsrohanverma.cabmatejiit.Activity.SplashcreenActivity"
+            android:name=".Activity.SplashcreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/FullscreenTheme">
@@ -21,11 +23,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.rsrohanverma.cabmatejiit.Activity.ChatActivity" />
-        <activity android:name="com.rsrohanverma.cabmatejiit.Activity.LoginActivity" />
-        <activity android:name="com.rsrohanverma.cabmatejiit.Activity.MainActivity">
+        <activity android:name=".Activity.ChatActivity" />
+        <activity android:name=".Activity.LoginActivity" />
+        <activity android:name=".Activity.MainActivity"></activity>
 
-        </activity>
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-7233191134291345~3470692485" />

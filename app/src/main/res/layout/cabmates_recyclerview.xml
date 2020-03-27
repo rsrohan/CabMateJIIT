@@ -29,6 +29,31 @@
         android:layout_gravity="center_horizontal"
         android:textStyle="italic"
         android:textColor="@android:color/black"
+        android:visibility="gone"
         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/call"
+        android:layout_gravity="center_horizontal"
+        android:drawableStart="@drawable/ic_call_black_24dp"
+        android:text="CALL"
+        android:gravity="center_vertical"
+        android:textColor="@color/bgdefault"
+        android:textStyle="bold"
+        android:drawablePadding="2dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/report"
+        android:layout_gravity="center_horizontal"
+        android:drawableStart="@android:drawable/stat_notify_error"
+        android:text="Report User"
+        android:drawablePadding="2dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/bgdefault"
+        android:textStyle="italic"
 
+        />
 </LinearLayout>
