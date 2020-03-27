@@ -48,7 +48,7 @@
             android:textColor="@android:color/black"
             android:textStyle="bold|italic"
             android:visibility="gone"
-            android:text="No groups available ! You can initiate making a group by your own."/>
+            android:text="No groups available! You can initiate making a group by your own. \nBe aware that the group you'll make will be shown to other people for only one hour and after that no one can join."/>
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

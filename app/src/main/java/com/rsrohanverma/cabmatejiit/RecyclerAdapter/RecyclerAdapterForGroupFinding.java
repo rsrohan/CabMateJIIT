@@ -55,7 +55,12 @@ public class RecyclerAdapterForGroupFinding extends RecyclerView.Adapter<Recycle
 
         final GroupDetails GroupDetails = groups.get(position);
 
-        holder.grpId.setText("Group Id:" + GroupDetails.getUniqueGroupName());
+        String cabbiesName="";
+        for (int i=0;i<GroupDetails.getCabbies().size();i++)
+        {
+            cabbiesName = cabbiesName+GroupDetails.getCabbies().get(i).getName()+" ("+GroupDetails.getCabbies().get(i).getNumberofseats()+" seats)"+"\n";
+        }
+        holder.grpId.setText(cabbiesName);
         holder.numberOfSeats.setText("Vacant Seats: " + String.valueOf(GroupDetails.getNumberOfVacantSeats()));
         holder.joinGroup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +77,7 @@ public class RecyclerAdapterForGroupFinding extends RecyclerView.Adapter<Recycle
                 int numberOfSeatsAvalable = groups.get(position).getNumberOfVacantSeats();
                 if (numberOfSeatsAvalable >= Integer.parseInt(cabbie.getNumberofseats())) {
                     groups.get(position).getCabbies().add(cabbie);
+                    groups.get(position).getCabbies_backup().add(cabbie);
                     groups.get(position).setNumberOfVacantSeats(numberOfSeatsAvalable - Integer.parseInt(cabbie.getNumberofseats()));
 
                     referenceToBookCab.child(groups.get(position).getUniqueGroupName()).setValue(groups.get(position));

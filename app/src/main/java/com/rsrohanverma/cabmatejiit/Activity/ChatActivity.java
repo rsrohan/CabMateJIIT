@@ -123,12 +123,13 @@ public class ChatActivity extends AppCompatActivity {
                 Log.d(TAG, "onCreate: " + userProfileDetails.getPathBooked());
                 setCabmateDetails();
                 setChatWindow();
-                FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).child("uniqueGroupName").addListenerForSingleValueEvent(new ValueEventListener() {
+                FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).child("timestamp").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         String id = dataSnapshot.getValue(String.class);
-                        groupId.setText("Group Id: " + id);
+                        //String s = groupId.getText().toString();
 
+                        groupId.setText("Time of creation of group - "+id.substring(id.indexOf("-")+1));
                     }
 
                     @Override
@@ -136,6 +137,20 @@ public class ChatActivity extends AppCompatActivity {
 
                     }
                 });
+//                FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).child("uniqueGroupName").addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        String id = dataSnapshot.getValue(String.class);
+//                        groupId.setText("Group Id: " + id);
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
+
             }
 
             @Override
@@ -348,7 +363,7 @@ public class ChatActivity extends AppCompatActivity {
                                         if (groupDetails.getCabbies().get(i).getPhone().equals(userProfileDetails.getPhone())) {
                                             groupDetails.setNumberOfVacantSeats(groupDetails.getNumberOfVacantSeats() + Integer.parseInt(groupDetails.getCabbies().get(i).getNumberofseats()));
                                             groupDetails.getCabbies().remove(i);
-                                            if (groupDetails.getNumberOfVacantSeats() == 4) {
+                                            if (groupDetails.getCabbies_backup().size() == 1) {
                                                 FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).setValue(null);
 
                                             } else {

@@ -6,8 +6,27 @@ public class GroupDetails {
 
     int numberOfVacantSeats;
     ArrayList<Cabmate> cabbies;
-    ArrayList<Message> CHATS;
+    ArrayList<Cabmate> cabbies_backup;
     String timestamp;
+    ArrayList<Message> CHATS;
+
+    public GroupDetails(int numberOfVacantSeats, ArrayList<Cabmate> cabbies, ArrayList<Cabmate> cabbies_backup, ArrayList<Message> CHATS, String timestamp, String uniqueGroupName) {
+        this.numberOfVacantSeats = numberOfVacantSeats;
+        this.cabbies = cabbies;
+        this.cabbies_backup = cabbies_backup;
+        this.CHATS = CHATS;
+        this.timestamp = timestamp;
+        this.uniqueGroupName = uniqueGroupName;
+    }
+
+    public ArrayList<Cabmate> getCabbies_backup() {
+        return cabbies_backup;
+    }
+
+    public void setCabbies_backup(ArrayList<Cabmate> cabbies_backup) {
+        this.cabbies_backup = cabbies_backup;
+    }
+
 
 
     public GroupDetails(int numberOfVacantSeats, ArrayList<Cabmate> cabbies, ArrayList<Message> CHATS, String timestamp, String uniqueGroupName) {

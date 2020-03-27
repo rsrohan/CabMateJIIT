@@ -45,6 +45,7 @@ import com.rsrohanverma.cabmatejiit.RecyclerAdapter.RecyclerAdapterForGroupFindi
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -67,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog dialog;
     private Activity activity;
     private InterstitialAd interstitialAd;
+    private DatabaseReference referenceToBookCab2;
+    private String currentDateAndTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
         seatNumber = findViewById(R.id.numberofseats);
         newGroup = findViewById(R.id.newGroup);
         user = FirebaseAuth.getInstance().getCurrentUser();
+
+        currentDateAndTime = new SimpleDateFormat("dd_MMM_yyyy-HH:mm").format(new Date());
 
         dialog = ProgressDialog.show(MainActivity.this, "", "Please Wait...");
         dialog.setCancelable(false);
@@ -180,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
                     //Calendar calendar = Calendar.getInstance();
 
-                    String currentDateAndTime = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss").format(new Date());
+                    String currentDateAndTime = new SimpleDateFormat("HH:mm").format(new Date());
 
 
                     cabbie.setTimestamp(currentDateAndTime);
@@ -201,18 +206,27 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "checkForSeats: " + cabbie);
         referenceToBookCab = FirebaseDatabase
                 .getInstance()
-                .getReference("BOOKINGS").child(cabbie.getSource() + "-" + cabbie.getDestination());
+                .getReference("BOOKINGS").child(cabbie.getSource() + "-" + cabbie.getDestination()).child(currentDateAndTime.substring(0, currentDateAndTime.indexOf("-")));
+        referenceToBookCab2 = FirebaseDatabase
+                .getInstance()
+                .getReference("SAVED_BOOKINGS").child(cabbie.getSource() + "-" + cabbie.getDestination());
         referenceToBookCab.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                 findViewById(R.id.bottomLayout).setVisibility(View.GONE);
                 findViewById(R.id.topLayout).setVisibility(View.VISIBLE);
 
-
                 ArrayList<GroupDetails> groupDetails = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     GroupDetails groupDetails1 = snapshot.getValue(GroupDetails.class);
-                    groupDetails.add(groupDetails1);
+                    if (System.currentTimeMillis()-Long.parseLong(groupDetails1.getUniqueGroupName()) <= 60000*60
+                            && groupDetails1.getNumberOfVacantSeats()>0
+                            && groupDetails1.getNumberOfVacantSeats()<4)
+                    {
+                        groupDetails.add(groupDetails1);
+
+                    }
+
                 }
                 RecyclerView recyclerView = findViewById(R.id.recyclerView);
                 recyclerView.setHasFixedSize(true);
@@ -245,9 +259,9 @@ public class MainActivity extends AppCompatActivity {
                 newGroup.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        newGroup.setClickable(false);
                         try {
                             dialog.show();
+                            newGroup.setClickable(false);
 
                         } catch (Exception Ignored) {
                         }
@@ -256,9 +270,10 @@ public class MainActivity extends AppCompatActivity {
                         GroupDetails g = new GroupDetails(4 - Integer.parseInt(cabbie.getNumberofseats()), cabmateArrayList);
                         String key = String.valueOf(System.currentTimeMillis());
                         g.setUniqueGroupName(key);
-                        String currentDateAndTime = new SimpleDateFormat("dd-MM-yyyy_HH:mm").format(new Date());
                         g.setTimestamp(currentDateAndTime);
+                        g.setCabbies_backup(cabmateArrayList);
                         referenceToBookCab.child(key).setValue(g);
+                        //referenceToBookCab2.child(key).setValue(g);
                         userDetailsReference2.setValue(true);
                         userDetailsReference.setValue(referenceToBookCab.child(String.valueOf(key)).toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
