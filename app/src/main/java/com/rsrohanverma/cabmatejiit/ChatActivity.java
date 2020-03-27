@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -20,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.rsrohanverma.cabmatejiit.JavaClass.GroupDetails;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,10 +33,10 @@ import com.google.firebase.ml.naturallanguage.smartreply.FirebaseSmartReply;
 import com.google.firebase.ml.naturallanguage.smartreply.FirebaseTextMessage;
 import com.google.firebase.ml.naturallanguage.smartreply.SmartReplySuggestion;
 import com.google.firebase.ml.naturallanguage.smartreply.SmartReplySuggestionResult;
+import com.rsrohanverma.cabmatejiit.JavaClass.GroupDetails;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -116,14 +114,14 @@ public class ChatActivity extends AppCompatActivity {
 
                     chatReference.setValue(messagesInGroup);
                     messageBox.setText("");
-                    try {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                        if (imm != null) {
-                            imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
-                        }
-                    } catch (Exception e) {
-                        // TODO: handle exception
-                    }
+//                    try {
+//                        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+//                        if (imm != null) {
+//                            imm.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+//                        }
+//                    } catch (Exception e) {
+//                        // TODO: handle exception
+//                    }
 
 
                 }

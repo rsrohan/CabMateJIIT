@@ -79,13 +79,15 @@
 
         <Spinner
             android:id="@+id/source"
-            android:layout_width="wrap_content"
+            android:layout_width="124dp"
             android:layout_height="wrap_content"
             android:padding="8dp"
+            android:gravity="center"
+            android:popupBackground="@drawable/bg"
             android:background="@drawable/bg"
             android:layout_alignParentStart="true"
             android:layout_below="@id/sourcetext"
-            android:layout_margin="12dp"
+            android:layout_margin="8dp"
             android:entries="@array/locations"/>
 
         <TextView
@@ -102,13 +104,14 @@
 
         <Spinner
             android:id="@+id/destination"
-            android:layout_width="wrap_content"
+            android:layout_width="124dp"
             android:layout_below="@id/desttext"
             android:layout_alignParentEnd="true"
+            android:popupBackground="@drawable/bg"
             android:background="@drawable/bg"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:layout_margin="12dp"
+            android:layout_margin="8dp"
             android:entries="@array/locations"/>
         <TextView
             android:id="@+id/numberofseatstext"
@@ -126,9 +129,10 @@
             android:id="@+id/numberofseats"
             android:layout_below="@id/numberofseatstext"
             android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:padding="8dp"
+            android:popupBackground="@drawable/bg"
             android:background="@drawable/bg"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="12dp"
