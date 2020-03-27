@@ -10,7 +10,6 @@ public class GroupDetails {
     String timestamp;
 
 
-
     public GroupDetails(int numberOfVacantSeats, ArrayList<Cabmate> cabbies, ArrayList<Message> CHATS, String timestamp, String uniqueGroupName) {
         this.numberOfVacantSeats = numberOfVacantSeats;
         this.cabbies = cabbies;
@@ -73,6 +72,7 @@ public class GroupDetails {
         this.numberOfVacantSeats = numberOfVacantSeats;
         this.cabbies = cabbies2;
     }
+
     public String getTimestamp() {
         return timestamp;
     }

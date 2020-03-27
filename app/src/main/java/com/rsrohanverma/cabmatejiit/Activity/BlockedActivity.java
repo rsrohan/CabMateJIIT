@@ -32,17 +32,16 @@ public class BlockedActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String messageText = message.getText().toString();
-                if (messageText.equals(""))
-                {
+                if (messageText.equals("")) {
                     Toast.makeText(getApplicationContext(), "Write something...", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     Intent i = new Intent(Intent.ACTION_SEND);
                     //i.setType("message/rfc822");
                     i.setData(Uri.parse("mailto:")); // only email apps should handle this
 
-                    i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"rsrohanverma@gmail.com"});
-                    i.putExtra(Intent.EXTRA_SUBJECT, "BLOCKED USER OF CabMateJIIT "+ FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
-                    i.putExtra(Intent.EXTRA_TEXT   , messageText);
+                    i.putExtra(Intent.EXTRA_EMAIL, new String[]{"rsrohanverma@gmail.com"});
+                    i.putExtra(Intent.EXTRA_SUBJECT, "BLOCKED USER OF CabMateJIIT " + FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+                    i.putExtra(Intent.EXTRA_TEXT, messageText);
                     try {
                         startActivity(Intent.createChooser(i, "Send mail..."));
                     } catch (android.content.ActivityNotFoundException ex) {

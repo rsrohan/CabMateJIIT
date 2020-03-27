@@ -2,10 +2,9 @@ package com.rsrohanverma.cabmatejiit.JavaClass;
 
 public class Message {
 
-    String message="-";
+    String message = "-";
     String name;
     String number;
-
 
 
     String timestamp;

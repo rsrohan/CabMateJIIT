@@ -42,16 +42,14 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                if (Pattern.compile(regEx).matcher(phone.getText().toString()).matches())
-                {
-                    phoneNumber = "+91"+phone.getText().toString();
+                if (Pattern.compile(regEx).matcher(phone.getText().toString()).matches()) {
+                    phoneNumber = "+91" + phone.getText().toString();
                     final OTPDialog otpDialog = new OTPDialog(LoginActivity.this, phone.getText().toString(), activity);
                     otpDialog.setCancelable(false);
                     otpDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
-                            if (otpDialog.isNewUser())
-                            {
+                            if (otpDialog.isNewUser()) {
 
                                 ProfileDialog profileDialog = new ProfileDialog(activity, null, activity);
                                 profileDialog.setCancelable(false);
@@ -63,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                                         finish();
                                     }
                                 });
-                            }else{
+                            } else {
                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                 finish();
                             }
@@ -71,24 +69,23 @@ public class LoginActivity extends AppCompatActivity {
                     });
                     otpDialog.show();
 
-                }else{
+                } else {
                     Toast.makeText(LoginActivity.this, "ARE YOU SURE THIS NUMBER IS VALID ?", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
     }
+
     public static final int PICK_IMAGE = 100;
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == PICK_IMAGE && resultCode==RESULT_OK) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
 
-            if (phoneNumber!=null)
-            {
+            if (phoneNumber != null) {
                 StorageReference imageStorageReference = FirebaseStorage.getInstance().getReference("DISPLAY_PICTURES");
-                imageStorageReference=imageStorageReference.child(phoneNumber);
+                imageStorageReference = imageStorageReference.child(phoneNumber);
 
                 Uri selectedImage = data.getData();
 

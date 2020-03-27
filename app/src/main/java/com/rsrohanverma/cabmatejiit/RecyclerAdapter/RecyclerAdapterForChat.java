@@ -18,7 +18,7 @@ import com.rsrohanverma.cabmatejiit.R;
 
 import java.util.ArrayList;
 
-public class RecyclerAdapterForChat extends RecyclerView.Adapter<RecyclerAdapterForChat.MyHolder>{
+public class RecyclerAdapterForChat extends RecyclerView.Adapter<RecyclerAdapterForChat.MyHolder> {
 
     Context context;
     ArrayList<Message> messages;
@@ -43,9 +43,8 @@ public class RecyclerAdapterForChat extends RecyclerView.Adapter<RecyclerAdapter
 
         Message message = messages.get(position);
 
-        if (!message.getNumber().equals(userPhone))
-        {
-            holder.sender.setText(message.getName()+"\nAt: "+message.getTimestamp());
+        if (!message.getNumber().equals(userPhone)) {
+            holder.sender.setText(message.getName() + "\nAt: " + message.getTimestamp());
             holder.receivedTxt.setText(message.getMessage());
             setAlphaAnimation(holder.receivedTxt);
             setAlphaAnimation(holder.sender);
@@ -54,7 +53,7 @@ public class RecyclerAdapterForChat extends RecyclerView.Adapter<RecyclerAdapter
             holder.sender.setVisibility(View.VISIBLE);
             holder.sentTxt.setVisibility(View.GONE);
 
-        }else{
+        } else {
             holder.sentTxt.setText(message.getMessage());
             setAlphaAnimation(holder.sentTxt);
             holder.sentTxt.setVisibility(View.VISIBLE);
@@ -71,7 +70,8 @@ public class RecyclerAdapterForChat extends RecyclerView.Adapter<RecyclerAdapter
     }
 
     public class MyHolder extends RecyclerView.ViewHolder {
-        TextView sender, receivedTxt,sentTxt;
+        TextView sender, receivedTxt, sentTxt;
+
         public MyHolder(@NonNull View itemView) {
             super(itemView);
             sender = itemView.findViewById(R.id.senderName);
@@ -80,8 +80,9 @@ public class RecyclerAdapterForChat extends RecyclerView.Adapter<RecyclerAdapter
 
         }
     }
+
     public void setAlphaAnimation(View v) {
-        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(v, "alpha",  1f, .1f);
+        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(v, "alpha", 1f, .1f);
         fadeOut.setDuration(0);
         ObjectAnimator fadeIn = ObjectAnimator.ofFloat(v, "alpha", .1f, 1f);
         fadeIn.setDuration(500);

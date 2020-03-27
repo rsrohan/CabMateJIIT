@@ -128,7 +128,7 @@ public class SplashcreenActivity extends AppCompatActivity {
         if (user == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
-        }else {
+        } else {
             final DatabaseReference userDetailsReference = FirebaseDatabase
                     .getInstance()
                     .getReference("USER_DETAILS")
@@ -137,18 +137,17 @@ public class SplashcreenActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    UserProfile userProfileInformations=new UserProfile();
+                    UserProfile userProfileInformations = new UserProfile();
                     try {
                         userProfileInformations = dataSnapshot.getValue(UserProfile.class);
                         assert userProfileInformations != null;
                         //userProfileInformations.isBlocked()
-                        if (userProfileInformations.isIsBlocked())
-                        {
+                        if (userProfileInformations.isIsBlocked()) {
 
                             startActivity(new Intent(getApplicationContext(), BlockedActivity.class));
                             finish();
 
-                        }else{
+                        } else {
                             if (userProfileInformations.isAlreadyBooked()) {
                                 startActivity(new Intent(getApplicationContext(), ChatActivity.class));
                                 finish();
@@ -253,6 +252,7 @@ public class SplashcreenActivity extends AppCompatActivity {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
+
     public static final int PICK_IMAGE = 100;
 
     @Override
@@ -278,7 +278,7 @@ public class SplashcreenActivity extends AppCompatActivity {
 
 
     public void setAlphaAnimation(View v) {
-        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(v, "alpha",  1f, .1f);
+        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(v, "alpha", 1f, .1f);
         fadeOut.setDuration(0);
         ObjectAnimator fadeIn = ObjectAnimator.ofFloat(v, "alpha", .1f, 1f);
         fadeIn.setDuration(500);

@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        activity=this;
+        activity = this;
         source = findViewById(R.id.source);
         dest = findViewById(R.id.destination);
         findCab = findViewById(R.id.findCab);
@@ -350,7 +350,6 @@ public class MainActivity extends AppCompatActivity {
                             FirebaseAuth.getInstance().signOut();
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                             finish();
-
 
 
                         }

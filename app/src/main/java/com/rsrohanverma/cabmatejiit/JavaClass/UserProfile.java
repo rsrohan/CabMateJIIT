@@ -23,7 +23,6 @@ public class UserProfile {
     }
 
 
-
     public String getImageURL() {
         return imageURL;
     }
@@ -65,7 +64,6 @@ public class UserProfile {
     }
 
 
-
     public String getGender() {
         return gender;
     }
@@ -95,6 +93,7 @@ public class UserProfile {
     public void setAlreadyBooked(boolean alreadyBooked) {
         this.alreadyBooked = alreadyBooked;
     }
+
     public boolean isIsBlocked() {
         return isBlocked;
     }
@@ -102,6 +101,7 @@ public class UserProfile {
     public void setIsBlocked(boolean blocked) {
         isBlocked = blocked;
     }
+
     public String getPathBooked() {
         return pathBooked;
     }

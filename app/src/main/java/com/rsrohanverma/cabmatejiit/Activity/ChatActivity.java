@@ -82,7 +82,7 @@ public class ChatActivity extends AppCompatActivity {
         sendButton = findViewById(R.id.sendBtn);
         groupId = findViewById(R.id.text);
 
-        activity=this;
+        activity = this;
 
         adView = findViewById(R.id.bannerAd);
         MobileAds.initialize(this, "ca-app-pub-7233191134291345/2555714992");
@@ -115,19 +115,19 @@ public class ChatActivity extends AppCompatActivity {
                 .getReference("USER_DETAILS")
                 .child(user.getPhoneNumber());
 
-        userProfileDetails=new UserProfile();
+        userProfileDetails = new UserProfile();
         referenceToUserDetails.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userProfileDetails = dataSnapshot.getValue(UserProfile.class);
-                Log.d(TAG, "onCreate: "+userProfileDetails.getPathBooked());
+                Log.d(TAG, "onCreate: " + userProfileDetails.getPathBooked());
                 setCabmateDetails();
                 setChatWindow();
                 FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).child("uniqueGroupName").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         String id = dataSnapshot.getValue(String.class);
-                        groupId.setText("Group Id: "+id);
+                        groupId.setText("Group Id: " + id);
 
                     }
 
@@ -154,12 +154,10 @@ public class ChatActivity extends AppCompatActivity {
                     String currentDateAndTime = new SimpleDateFormat("HH:mm").format(new Date());
                     m.setTimestamp(currentDateAndTime);
 
-
-
                     chatReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            ArrayList<Message> messageArrayList=new ArrayList<>();
+                            ArrayList<Message> messageArrayList = new ArrayList<>();
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 messageArrayList.add(snapshot.getValue(Message.class));
                                 Log.d(TAG, "onDataChange: " + messageArrayList.size());
@@ -180,7 +178,6 @@ public class ChatActivity extends AppCompatActivity {
                     messageBox.setText("");
 
 
-
                 }
             }
         });
@@ -189,7 +186,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setChatWindow() {
-        chatReference=FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).child("chats");
+        chatReference = FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).child("chats");
         chatReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -346,18 +343,15 @@ public class ChatActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                                    GroupDetails groupDetails= dataSnapshot.getValue(GroupDetails.class);
-                                    for (int i=0;i<groupDetails.getCabbies().size();i++)
-                                    {
-                                        if (groupDetails.getCabbies().get(i).getPhone().equals(userProfileDetails.getPhone()))
-                                        {
-                                            groupDetails.setNumberOfVacantSeats(groupDetails.getNumberOfVacantSeats()+Integer.parseInt(groupDetails.getCabbies().get(i).getNumberofseats()));
+                                    GroupDetails groupDetails = dataSnapshot.getValue(GroupDetails.class);
+                                    for (int i = 0; i < groupDetails.getCabbies().size(); i++) {
+                                        if (groupDetails.getCabbies().get(i).getPhone().equals(userProfileDetails.getPhone())) {
+                                            groupDetails.setNumberOfVacantSeats(groupDetails.getNumberOfVacantSeats() + Integer.parseInt(groupDetails.getCabbies().get(i).getNumberofseats()));
                                             groupDetails.getCabbies().remove(i);
-                                            if (groupDetails.getNumberOfVacantSeats()==4)
-                                            {
+                                            if (groupDetails.getNumberOfVacantSeats() == 4) {
                                                 FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).setValue(null);
 
-                                            }else{
+                                            } else {
                                                 FirebaseDatabase.getInstance().getReferenceFromUrl(userProfileDetails.getPathBooked()).setValue(groupDetails);
 
                                             }
@@ -379,7 +373,6 @@ public class ChatActivity extends AppCompatActivity {
 
                                 }
                             });
-
 
 
                         }

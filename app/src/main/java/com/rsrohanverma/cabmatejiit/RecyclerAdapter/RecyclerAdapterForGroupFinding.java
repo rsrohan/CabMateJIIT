@@ -38,24 +38,25 @@ public class RecyclerAdapterForGroupFinding extends RecyclerView.Adapter<Recycle
     public RecyclerAdapterForGroupFinding(Context context, ArrayList<GroupDetails> groups, Cabmate cabmate, DatabaseReference reference, DatabaseReference reference2, Activity activity2) {
         this.context = context;
         this.groups = groups;
-        this.cabbie=cabmate;
-        this.referenceToBookCab=reference;
-        this.userDetailsReference=reference2;
-        this.activity=activity2;
+        this.cabbie = cabmate;
+        this.referenceToBookCab = reference;
+        this.userDetailsReference = reference2;
+        this.activity = activity2;
     }
 
     @NonNull
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyHolder(LayoutInflater.from(context).inflate(R.layout.groups_recyclerview, parent, false));    }
+        return new MyHolder(LayoutInflater.from(context).inflate(R.layout.groups_recyclerview, parent, false));
+    }
 
     @Override
     public void onBindViewHolder(@NonNull final MyHolder holder, final int position) {
 
         final GroupDetails GroupDetails = groups.get(position);
 
-        holder.grpId.setText("Group Id:"+GroupDetails.getUniqueGroupName());
-        holder.numberOfSeats.setText("Vacant Seats: "+String.valueOf(GroupDetails.getNumberOfVacantSeats()));
+        holder.grpId.setText("Group Id:" + GroupDetails.getUniqueGroupName());
+        holder.numberOfSeats.setText("Vacant Seats: " + String.valueOf(GroupDetails.getNumberOfVacantSeats()));
         holder.joinGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,11 +69,10 @@ public class RecyclerAdapterForGroupFinding extends RecyclerView.Adapter<Recycle
                 } catch (Exception Ignored) {
                 }
 
-                int numberOfSeatsAvalable =  groups.get(position).getNumberOfVacantSeats();
-                if (numberOfSeatsAvalable>=Integer.parseInt(cabbie.getNumberofseats()))
-                {
+                int numberOfSeatsAvalable = groups.get(position).getNumberOfVacantSeats();
+                if (numberOfSeatsAvalable >= Integer.parseInt(cabbie.getNumberofseats())) {
                     groups.get(position).getCabbies().add(cabbie);
-                    groups.get(position).setNumberOfVacantSeats(numberOfSeatsAvalable-Integer.parseInt(cabbie.getNumberofseats()));
+                    groups.get(position).setNumberOfVacantSeats(numberOfSeatsAvalable - Integer.parseInt(cabbie.getNumberofseats()));
 
                     referenceToBookCab.child(groups.get(position).getUniqueGroupName()).setValue(groups.get(position));
                     FirebaseDatabase.getInstance().getReference("USER_DETAILS").child(cabbie.getPhone()).child("alreadyBooked").setValue(true);
@@ -97,18 +97,17 @@ public class RecyclerAdapterForGroupFinding extends RecyclerView.Adapter<Recycle
                             } catch (Exception Ignored) {
                             }
                             FirebaseDatabase.getInstance().getReference("USER_DETAILS").child(cabbie.getPhone()).child("alreadyBooked").setValue(false);
-                            Toast.makeText(context, ""+e, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "" + e, Toast.LENGTH_SHORT).show();
 
 
                         }
                     });
 
-                }else{
+                } else {
                     Toast.makeText(context, "Seats are not available as per your requirement !", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
 
 
     }
@@ -122,11 +121,12 @@ public class RecyclerAdapterForGroupFinding extends RecyclerView.Adapter<Recycle
 
         TextView numberOfSeats, grpId;
         Button joinGroup;
+
         public MyHolder(@NonNull View itemView) {
             super(itemView);
             numberOfSeats = itemView.findViewById(R.id.numberofseats);
             joinGroup = itemView.findViewById(R.id.joinGroup);
-            grpId=itemView.findViewById(R.id.grpId);
+            grpId = itemView.findViewById(R.id.grpId);
         }
     }
 }

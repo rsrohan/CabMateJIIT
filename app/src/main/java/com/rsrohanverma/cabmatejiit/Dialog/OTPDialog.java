@@ -40,12 +40,13 @@ public class OTPDialog extends Dialog implements DialogInterface.OnClickListener
     String phone;
     private FirebaseAuth mAuth;
     ProgressBar progressBar;
-    private String TAG="tag";
+    private String TAG = "tag";
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     Activity activity;
     private ProgressDialog progressDialog;
 
     boolean isNewUser = false;
+
     public OTPDialog(@NonNull final Context context, String phone, Activity activity) {
         super(context);
         this.context = context;
@@ -66,15 +67,14 @@ public class OTPDialog extends Dialog implements DialogInterface.OnClickListener
         message = findViewById(R.id.message);
 
         mAuth = FirebaseAuth.getInstance();
-        phone = "+91"+phone;
+        phone = "+91" + phone;
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             sendVerificationCode(phone);
-        }else{
+        } else {
             Toast.makeText(context, "less than KITKAT", Toast.LENGTH_SHORT).show();
         }
-
 
 
         verifyOTP.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +88,7 @@ public class OTPDialog extends Dialog implements DialogInterface.OnClickListener
 
                     } catch (Exception e) {
                         Toast.makeText(context, "onclick" + e, Toast.LENGTH_LONG).show();
-                        Log.d(TAG, "onClick: "+e);
+                        Log.d(TAG, "onClick: " + e);
                     }
 
                 } else {
@@ -121,7 +121,7 @@ public class OTPDialog extends Dialog implements DialogInterface.OnClickListener
                     mCallbacks);
         } catch (Exception e) {
             Toast.makeText(context, "" + e, Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "sendverificationcode: "+e);
+            Log.d(TAG, "sendverificationcode: " + e);
 
         }
 
@@ -139,10 +139,11 @@ public class OTPDialog extends Dialog implements DialogInterface.OnClickListener
         @Override
         public void onVerificationFailed(FirebaseException e) {
             Toast.makeText(context, "" + e, Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "verification failed: "+e);
+            Log.d(TAG, "verification failed: " + e);
 
 
         }
+
         @Override
         public void onCodeAutoRetrievalTimeOut(String s) {
             super.onCodeAutoRetrievalTimeOut(s);
@@ -155,6 +156,7 @@ public class OTPDialog extends Dialog implements DialogInterface.OnClickListener
             resendOTP.setVisibility(View.VISIBLE);
 
         }
+
         @Override
         public void onCodeSent(String verificationId, PhoneAuthProvider.ForceResendingToken token) {
             // The SMS verification code has been sent to the provided phone number, we
@@ -176,18 +178,15 @@ public class OTPDialog extends Dialog implements DialogInterface.OnClickListener
         mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful())
-                {
+                if (task.isSuccessful()) {
                     //Toast.makeText(context, "success"+task, Toast.LENGTH_SHORT).show();
                     dismiss();
-                    try{
-                        if (task.getResult().getAdditionalUserInfo().isNewUser())
-                        {
+                    try {
+                        if (task.getResult().getAdditionalUserInfo().isNewUser()) {
                             isNewUser = true;
                         }
-                    }catch (Exception e)
-                    {
-                        Toast.makeText(context, ""+e, Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(context, "" + e, Toast.LENGTH_SHORT).show();
                     }
 
                 }

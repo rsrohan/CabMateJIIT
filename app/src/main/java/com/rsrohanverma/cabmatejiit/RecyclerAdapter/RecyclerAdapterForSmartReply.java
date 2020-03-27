@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class RecyclerAdapterForSmartReply extends RecyclerView.Adapter<RecyclerAdapterForSmartReply.MyHolder>{
+public class RecyclerAdapterForSmartReply extends RecyclerView.Adapter<RecyclerAdapterForSmartReply.MyHolder> {
 
     Context context;
     ArrayList<String> reply;
@@ -32,9 +32,9 @@ public class RecyclerAdapterForSmartReply extends RecyclerView.Adapter<RecyclerA
     public RecyclerAdapterForSmartReply(Context context, ArrayList<String> message, DatabaseReference reference, String username, String number, ArrayList<Message> messages) {
         this.context = context;
         this.reply = message;
-        this.reference=reference;
-        this.username=username;
-        this.number=number;
+        this.reference = reference;
+        this.username = username;
+        this.number = number;
         this.messages = messages;
     }
 
@@ -54,7 +54,7 @@ public class RecyclerAdapterForSmartReply extends RecyclerView.Adapter<RecyclerA
         holder.smartReply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Message m = new Message(reply.get(position), username ,number);
+                Message m = new Message(reply.get(position), username, number);
                 String currentDateAndTime = new SimpleDateFormat("HH:mm").format(new Date());
 
                 m.setTimestamp(currentDateAndTime);
@@ -75,6 +75,7 @@ public class RecyclerAdapterForSmartReply extends RecyclerView.Adapter<RecyclerA
 
     public class MyHolder extends RecyclerView.ViewHolder {
         TextView smartReply;
+
         public MyHolder(@NonNull View itemView) {
             super(itemView);
             smartReply = itemView.findViewById(R.id.smartReply);
@@ -82,8 +83,9 @@ public class RecyclerAdapterForSmartReply extends RecyclerView.Adapter<RecyclerA
 
         }
     }
+
     public void setAlphaAnimation(View v) {
-        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(v, "alpha",  1f, .1f);
+        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(v, "alpha", 1f, .1f);
         fadeOut.setDuration(0);
         ObjectAnimator fadeIn = ObjectAnimator.ofFloat(v, "alpha", .1f, 1f);
         fadeIn.setDuration(500);

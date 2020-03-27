@@ -30,7 +30,7 @@ public class RecyclerAdapterForCabmates extends RecyclerView.Adapter<RecyclerAda
 
     Context context;
     ArrayList<Cabmate> cabmates;
-    private int REQUEST_PHONE_CALL=1;
+    private int REQUEST_PHONE_CALL = 1;
     Activity activity;
 
     public RecyclerAdapterForCabmates(Context context, ArrayList<Cabmate> cabmates, Activity act) {
@@ -83,9 +83,9 @@ public class RecyclerAdapterForCabmates extends RecyclerView.Adapter<RecyclerAda
                 //i.setType("email/rfc822");
                 i.setData(Uri.parse("mailto:")); // only email apps should handle this
 
-                i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"rsrohanverma@gmail.com"});
+                i.putExtra(Intent.EXTRA_EMAIL, new String[]{"rsrohanverma@gmail.com"});
                 i.putExtra(Intent.EXTRA_SUBJECT, "REPORTING USER OF CabMateJIIT");
-                i.putExtra(Intent.EXTRA_TEXT   , "Username: "+Cabmate.getName()+"\nPhone: "+Cabmate.getPhone()+"\nWrite issue:");
+                i.putExtra(Intent.EXTRA_TEXT, "Username: " + Cabmate.getName() + "\nPhone: " + Cabmate.getPhone() + "\nWrite issue:");
 
                 try {
                     //i.addFlags(FLAG_ACTIVITY_NEW_TASK);
@@ -109,12 +109,13 @@ public class RecyclerAdapterForCabmates extends RecyclerView.Adapter<RecyclerAda
 
         CircleImageView circleImageView;
         TextView name, seats, report;
+
         public MyHolder(@NonNull View itemView) {
             super(itemView);
             circleImageView = itemView.findViewById(R.id.displayPicture);
             name = itemView.findViewById(R.id.cabmatename);
             seats = itemView.findViewById(R.id.call);
-            report=itemView.findViewById(R.id.report);
+            report = itemView.findViewById(R.id.report);
         }
     }
 }

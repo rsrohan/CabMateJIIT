@@ -50,11 +50,12 @@ public class ProfileDialog extends Dialog implements DialogInterface.OnClickList
     private int PICK_IMAGE = 100;
 
     Activity activity;
+
     public ProfileDialog(@NonNull Context context, String name, Activity activity) {
         super(context);
         this.name = name;
         this.context = context;
-        this.activity=activity;
+        this.activity = activity;
     }
 
     @Override
@@ -82,10 +83,10 @@ public class ProfileDialog extends Dialog implements DialogInterface.OnClickList
                 getIntent.setType("image/*");
 
                 Intent pickIntent = new Intent(Intent.ACTION_PICK);
-                pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
+                pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
 
                 Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
                 activity.startActivityForResult(chooserIntent, PICK_IMAGE);
             }
@@ -95,8 +96,7 @@ public class ProfileDialog extends Dialog implements DialogInterface.OnClickList
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (gender.getSelectedItemPosition()!=0)
-                {
+                if (gender.getSelectedItemPosition() != 0) {
                     if (!username.getText().toString().isEmpty()) {
                         try {
                             save.setVisibility(View.GONE);
@@ -111,7 +111,7 @@ public class ProfileDialog extends Dialog implements DialogInterface.OnClickList
                             userProfile.setName(username.getText().toString().toUpperCase());
                             userProfile.setGender(gender.getSelectedItem().toString());
                             userProfile.setIsBlocked(false);
-                            try{
+                            try {
                                 imageReference.child(user.getUid()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
@@ -125,24 +125,23 @@ public class ProfileDialog extends Dialog implements DialogInterface.OnClickList
                                         setProfile(userProfile);
                                     }
                                 });
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 userProfile.setImageURL("null");
                                 setProfile(userProfile);
                             }
 
 
-
                         } catch (Exception e) {
                             Toast.makeText(context, "" + e, Toast.LENGTH_SHORT).show();
 
-                            Log.d("tag", "onClick: "+e);
+                            Log.d("tag", "onClick: " + e);
                         }
 
 
-                    }else{
+                    } else {
                         Toast.makeText(context, "Enter Full Name", Toast.LENGTH_SHORT).show();
                     }
-                }else{
+                } else {
                     Toast.makeText(context, "Select Gender", Toast.LENGTH_SHORT).show();
                 }
 
@@ -151,8 +150,8 @@ public class ProfileDialog extends Dialog implements DialogInterface.OnClickList
 
     }
 
-    private void setProfile( UserProfile userProfile) {
-        reference=FirebaseDatabase.getInstance().getReference("USER_DETAILS").child(user.getPhoneNumber());
+    private void setProfile(UserProfile userProfile) {
+        reference = FirebaseDatabase.getInstance().getReference("USER_DETAILS").child(user.getPhoneNumber());
         reference.setValue(userProfile).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -175,7 +174,6 @@ public class ProfileDialog extends Dialog implements DialogInterface.OnClickList
     public void onClick(DialogInterface dialog, int which) {
 
     }
-
 
 
 }

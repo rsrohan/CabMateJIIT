@@ -40,6 +40,7 @@ public class BlockedDialog extends Dialog implements DialogInterface.OnClickList
     Context context;
 
     ImageButton send;
+
     public BlockedDialog(@NonNull Context context) {
         super(context);
         this.context = context;
@@ -60,7 +61,6 @@ public class BlockedDialog extends Dialog implements DialogInterface.OnClickList
     public void onClick(DialogInterface dialog, int which) {
 
     }
-
 
 
 }
