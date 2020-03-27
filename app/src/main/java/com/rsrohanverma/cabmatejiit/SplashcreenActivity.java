@@ -5,22 +5,17 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.dynamicanimation.animation.DynamicAnimation;
-import androidx.dynamicanimation.animation.SpringAnimation;
-import androidx.dynamicanimation.animation.SpringForce;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -267,36 +262,8 @@ public class SplashcreenActivity extends AppCompatActivity {
 
         }
     }
-    private SpringForce getSpringForce(float dampingRatio, float stiffness, float finalPosition) {
-        SpringForce force = new SpringForce();
-        force.setDampingRatio(dampingRatio).setStiffness(stiffness);
-        force.setFinalPosition(finalPosition);
-        return force;
-    }
 
 
-
-    private float getVelocity(float velocityDp) {
-        //Get Velocity in pixels per second from dp per second
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, velocityDp,
-                getResources().getDisplayMetrics());
-    }
-    private SpringAnimation getHighBounceScaleX(View view, float velocityDp, float finalPosition, float DAMPING, float STIFFNESS) {
-        final SpringAnimation anim = new SpringAnimation(view, DynamicAnimation.SCALE_X);
-        anim.setStartVelocity(getVelocity(velocityDp));
-        anim.animateToFinalPosition(finalPosition);
-        anim.setSpring(getSpringForce(DAMPING, STIFFNESS, finalPosition));
-        return anim;
-    }
-
-
-    private SpringAnimation getHighBounceScaleY(View view, float velocityDp, float finalPosition, float DAMPING, float STIFFNESS) {
-        final SpringAnimation anim = new SpringAnimation(view, DynamicAnimation.SCALE_Y);
-        anim.setStartVelocity(getVelocity(velocityDp));
-        anim.animateToFinalPosition(finalPosition);
-        anim.setSpring(getSpringForce(DAMPING, STIFFNESS, finalPosition));
-        return anim;
-    }
     public void setAlphaAnimation(View v) {
         ObjectAnimator fadeOut = ObjectAnimator.ofFloat(v, "alpha",  1f, .1f);
         fadeOut.setDuration(0);

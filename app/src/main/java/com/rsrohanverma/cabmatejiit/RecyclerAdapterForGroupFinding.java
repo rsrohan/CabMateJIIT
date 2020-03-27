@@ -82,6 +82,7 @@ public class RecyclerAdapterForGroupFinding extends RecyclerView.Adapter<Recycle
                             } catch (Exception Ignored) {
                             }
                             context.startActivity(new Intent(context, ChatActivity.class).addFlags(FLAG_ACTIVITY_NEW_TASK));
+                            //((Activity)context).finish();
 
                         }
                     }).addOnFailureListener(new OnFailureListener() {
